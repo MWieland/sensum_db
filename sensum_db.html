@@ -1,0 +1,1108 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1//EN' 'http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' >
+<head>
+<title>Database Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<style type='text/css'>
+	 #dbs {font-family:Tahoma,Dialog,Sans-Serif;font-size:12px;background:#fff;width:80%;border-collapse:collapse;text-align:left;margin:8px;}
+	 #dbs thead{background:#c0d4f3;background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffffff), to( #c0d4f3));}
+	 #dbs th{font-size:12px;font-weight:bold;color:#333;border-bottom:1px solid #333;padding:5px 6px;}
+	 #dbs td{border-bottom:1px solid #ddd;padding:3px 5px;white-space: pre;}
+	 td.subpart{background:#c0d4f3;background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffffff), to( #c0d4f3));}
+	 #dbs tbody tr:hover td{color:#000;background:#fffcea;}
+</style>
+</head>
+
+<body>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'   width='1425' height='785' viewbox='0 0 1425 785' >
+<style type='text/css'>
+  text                { fill:#000000; font-family: Tahoma, Dialog, Arial; font-size:11px; stroke:#000000; stroke-width:0.1; }
+  text:hover          { fill:#a00000; font-size:12px;}
+  text.colType        { fill:#a9bdc6; }
+  text.tableTitle     { fill:#000000; }
+  path                { stroke:#5a5a5a; stroke-width:1.5; fill:none; }
+  rect.table          { fill:#ffffff; stroke:#676767; stroke-width:0.5; filter:url(#shadow); }
+  line.table          { stroke:#9ea1a4; stroke-width:0.3; }
+  rect.callout        { fill:url(#calloutGradient); stroke:#aea913; stroke-width:0.5; }
+  rect.grp            { opacity:0.5; stroke:#8a8a8a; stroke-width:2; }
+</style>
+<defs>
+  <pattern id='layoutGradient' patternUnits='userSpaceOnUse' x='0' y='0' width='10' height='10' viewBox='0 0 10 10'>
+    <rect x='0' y='0' width='10' height='10' style='fill:#f7f7f0;' />
+    <line x1='5' y1='10' x2='5' y2='0' style='stroke:#949494;stroke-width:0.5;stroke-dasharray:1,9;'  />
+  </pattern>
+  <radialGradient id='layoutGradientOld' cx='20%' cy='20%' r='25%' fx='10%' fy='0%'>
+	   <stop offset='0%' stop-color='#ffffff' />
+    <stop offset='100%' stop-color='#efefef' />
+  </radialGradient>
+  <linearGradient id='tableHeaderGradient0' x1='0%' y1='0%' x2='0%' y2='100%' >
+          <stop offset='0%' stop-color='white'/> 
+          <stop offset='30%' stop-color='white'/> 
+          <stop offset='100%' stop-color='#d7c2f2'/> 
+   </linearGradient>
+  <linearGradient id='tableHeaderGradient1' x1='0%' y1='0%' x2='0%' y2='100%' >
+          <stop offset='0%' stop-color='white'/> 
+          <stop offset='30%' stop-color='white'/> 
+          <stop offset='100%' stop-color='#c0d4f3'/> 
+   </linearGradient>
+  <linearGradient id='groupGradient3' x1='0%' y1='0%' x2='100%' y2='0%' >
+          <stop offset='0%' stop-color='white'/> 
+          <stop offset='100%' stop-color='#c4e0f9'/> 
+   </linearGradient>
+  <linearGradient id='groupGradient4' x1='0%' y1='0%' x2='100%' y2='0%' >
+          <stop offset='0%' stop-color='white'/> 
+          <stop offset='100%' stop-color='#ffcccc'/> 
+   </linearGradient>
+  <linearGradient id='groupGradient2' x1='0%' y1='0%' x2='100%' y2='0%' >
+          <stop offset='0%' stop-color='white'/> 
+          <stop offset='100%' stop-color='#e3d7f2'/> 
+   </linearGradient>
+  <linearGradient id='groupUnderTitleLine' x1='0%' y1='0%' x2='100%' y2='0%' >
+          <stop offset='0%' stop-color='#999999' stop-opacity='0.7'/> 
+          <stop offset='100%' stop-color='#999999' stop-opacity='0' /> 
+   </linearGradient>
+  <radialGradient id='calloutGradient' cx='20%' cy='20%' r='100%' fx='10%' fy='10%'>
+	   <stop offset='0%' stop-color='#ffffff' />
+    <stop offset='100%' stop-color='#f4f1a4' />
+  </radialGradient>
+  <filter id='shadow' width='150%' height='150%'> 
+    <feGaussianBlur in='SourceAlpha' stdDeviation='2' result='image1' /> 
+    <feOffset in='image1' result='image2' dx='2' dy='2' />
+    <feColorMatrix type='matrix' in='image2' result='image3' 
+       values='1 1 1 0 0 
+               1 1 1 0 0 
+               1 1 1 0 0 
+               0 0 0 .5 0'/>
+    <feComposite in='SourceGraphic' in2='image3' operator='over' /> 
+  </filter>
+  <filter id='legendShadow' filterUnits='userSpaceOnUse' x='0' y='0' width='400' height='120'> 
+     <feGaussianBlur in='SourceAlpha' stdDeviation='3' result='blur'/> 
+     <feOffset in='blur' dx='2' dy='2' result='offsetBlur'/> 
+     <feSpecularLighting in='blur' surfaceScale='5' specularConstant='.75' specularExponent='20' lighting-color='#bbbbbb' result='specOut'>
+        <fePointLight x='-5000' y='-10000' z='20000'/>  
+     </feSpecularLighting> 
+     <feComposite in='specOut' in2='SourceAlpha' operator='in' result='specOut'/> 
+     <feComposite in='SourceGraphic' in2='specOut' operator='arithmetic' k1='0' k2='1' k3='1' k4='0' result='litPaint'/>  
+     <feMerge> 
+         <feMergeNode in='offsetBlur'/> 
+         <feMergeNode in='litPaint'/> 
+     </feMerge> 
+  </filter> 
+  <radialGradient id='legendGradient' fx='5%' fy='5%' r='75%' spreadMethod='pad'>
+          <stop offset='0%' stop-color='#cfd7f6' stop-opacity='1'/> 
+          <stop offset='100%' stop-color='#919dd0' stop-opacity='1' /> 
+   </radialGradient>
+  <symbol id='calloutArrowDown' overflow='visible' >
+      <path d='M 0,0 L 7,11 L 15,0 z' style='fill:#f4f1a4; stroke:#aea913; stroke-width:0.5;' />
+  </symbol>
+  <symbol id='calloutArrowUp' overflow='visible' >
+      <path d='M 0,15 L 7,3 L 15,15 z' style='fill:#f4f1a4; stroke:#aea913; stroke-width:0.5;' />
+  </symbol>
+  <symbol id='pk' overflow='visible' >
+    <g transform='scale(0.99)'>
+     <path style='fill:#e9ad16;stroke:#9c4f15;stroke-width:0.7;stroke-linecap:round;stroke-linejoin:round;'
+        d='M 9.3678877,3.5695485 C 9.1030218,3.2729386 9.0796382,2.7628519 9.3396185,2.4517097 9.5449651,2.1956495 9.9040386,2.0980533 10.199638,2.2169415 10.533525,2.3415459 10.775153,2.706942 10.750675,3.0842709 10.737029,3.3980003 10.541153,3.699122 10.258248,3.8066067 9.966649,3.9250429 9.6169668,3.8418805 9.4008073,3.6062324 9.3894892,3.5943518 9.3785264,3.582104 9.3678886,3.5695487 z M 11.226617,6.9916004 C 11.888137,6.3548946 12.293488,5.4172188 12.311087,4.442353 12.378144,2.7379364 11.248678,1.0541269 9.7322318,0.44767357 8.3887112,-0.1280313 6.7865012,0.26822889 5.8918395,1.4007929 5.080823,2.3839145 4.9336815,3.8452096 5.3635544,5.101615 L 4.3670905,5.315913 C 4.0664984,5.3682645 4.0967703,5.6316724 4.2574957,5.8208829 L 4.9124,6.5655244 4.1543436,7.2512357 3.2136002,7.2163506 3.1674775,8.5586827 2.0406832,8.5086512 1.5965306,8.9299953 1.5471661,10.179833 0.75616674,10.195223 0.2112857,10.758575 0.15354288,11.735988 0.07199052,12.765553 c 0.36440953,0.238225 0.79006967,0.195492 1.44938278,-0.02675 L 6.3033562,8.1282037 6.8217102,8.6765688 C 6.9985465,8.8799427 7.3003699,8.7497574 7.358381,8.5016252 L 7.4938877,7.5084164 c 0.8537488,0.3985387 1.8303125,0.4711541 2.6851793,0.1427713 0.393927,-0.1407258 0.746858,-0.3701772 1.04755,-0.6595873 z'/>
+     <path d='M 6.8014948,6.3102123 0.15369063,13.024481 0.21560535,12.141962 6.0062342,6.2683782 z'
+        style='fill:#ffe5a5;fill-opacity:1;stroke:#854e31;stroke-width:0.09912433;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:3.00300009'/>
+    </g>
+  </symbol>
+  <symbol id='unq' overflow='visible' >
+    <g transform='scale(0.99)'>
+      <rect style='fill:#e07554;stroke:#7e4d31;stroke-width:0.71934468;stroke-linecap:round;stroke-linejoin:round;'
+         width='2.29' height='8.43' x='7.48' y='-0.76' ry='1.14' transform='matrix(0.701,0.713,-0.727,0.685,0,0)' />
+      <path style='fill:white;stroke:#a4a4a4;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;'
+         d='m 26.04,8.64 a 4.13,4.13 0 1 1 -8.26,0 4.13,4.13 0 1 1 8.26,0 z'
+         transform='matrix(1.025,0,0,0.987,-14.690,-3.862)' />
+      <text x='5.5' y='6.85' style='font-size:8px;fill:#307fc9;'>1</text>
+    </g>
+  </symbol>
+  <symbol id='idx' overflow='visible' >
+    <g transform='scale(0.99)'>
+      <rect style='fill:#e07554;stroke:#7e4d31;stroke-width:0.71934468;stroke-linecap:round;stroke-linejoin:round;'
+         width='2.29' height='8.43' x='7.48' y='-0.76' ry='1.14' transform='matrix(0.701,0.713,-0.727,0.685,0,0)' />
+      <path style='fill:white;stroke:#a4a4a4;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;'
+         d='m 26.04,8.64 a 4.13,4.13 0 1 1 -8.26,0 4.13,4.13 0 1 1 8.26,0 z'
+         transform='matrix(1.025,0,0,0.987,-14.690,-3.862)' />
+    </g>
+  </symbol>
+  <symbol id='fk' overflow='visible' >
+    <path style='fill:#9fbfef;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+    d='M 12.48,0.33 7.07,0.89 9.067,2.974 0.329,11.731 1.073,12.597 9.811,3.841 11.77,5.78 z' />
+  </symbol>
+  <symbol id='ref' overflow='visible' >
+  <path style='fill:#9fbfef;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 0.10,12.70 5.31,12.15 3.40,10.06 11.82,1.32 11.11,0.45 2.68,9.19 0.80,7.24 z'/>
+  </symbol>
+  <marker id='arrow' viewBox='0 0 7 7' refX='0' refY='3' markerUnits='strokeWidth' markerWidth='7' markerHeight='7' orient='auto'>
+    <path d='M 0,0 L 7, 3 L 0,7 z' style='fill:#5a5a5a; stroke-width:0px;' />
+  </marker>
+  <marker id='foot' viewBox='0 0 7 7' refX='7' refY='3' markerUnits='strokeWidth' markerWidth='7' markerHeight='7' orient='auto'>
+    <path d='M 0,3 L 15, 3 z' style='stroke:#5a5a5a;' />
+  </marker>
+</defs>
+
+<!-- ============= Desktop ============= -->
+<rect x='1' y='1' width='1423' height='783' rx='7' ry='7' style='fill:white; stroke:#104576; stroke-width:0.5;' />
+
+<!-- ============= Legend ============= -->
+<g transform='translate(10,10)'>
+  <rect x='10' y='10' width='320' height='76' rx='6' ry='6' style='fill:url(#legendGradient);filter:url(#legendShadow);'/> 
+  <text x='20' y='30'><tspan>Project</tspan> PostgreSQL</text> 
+  <text x='20' y='44'><tspan>Layout</tspan> sensum_db_v092</text> 
+  <text x='20' y='58'><tspan>Tip: Move the mouse over columns to read the comments</tspan></text> 
+  <text x='180' y='74'><tspan>Generated using <a xlink:href='http://www.dbschema.com'>DbSchema</a></tspan></text> 
+</g>
+
+<g transform='translate(0,110)'>
+<!-- ============= Group 'object_res1' ============= -->
+<rect class='grp' style='fill:url(#groupGradient2);' x='29' y='25' width='452' height='590' />
+<text x='40' y='40'>object_res1</text>
+<rect style='fill:url(#groupUnderTitleLine); stroke-width:2;' x='40' y='43' width='430' height='2' />
+
+<!-- ============= Group 'taxonomy' ============= -->
+<rect class='grp' style='fill:url(#groupGradient3);' x='554' y='25' width='572' height='605' />
+<text x='565' y='40'>taxonomy</text>
+<rect style='fill:url(#groupUnderTitleLine); stroke-width:2;' x='565' y='43' width='550' height='2' />
+
+<!-- ============= Group 'history' ============= -->
+<rect class='grp' style='fill:url(#groupGradient4);' x='1154' y='25' width='242' height='275' />
+<text x='1165' y='40'>history</text>
+<rect style='fill:url(#groupUnderTitleLine); stroke-width:2;' x='1165' y='43' width='220' height='2' />
+
+<path transform='translate(7,0)' marker-start='url(#foot)' marker-end='url(#arrow)'  style='stroke-dasharray:4,2;'  d='M 720 405 L 712,405 Q 705,405 705,397 L 705,247 Q 705,240 712,240 L 720,240' >
+	<title>Foreign Key fk_attribute_type_code
+	dic_attribute_value references dic_attribute_type ( attribute_type_code -> code )</title>
+</path>
+<text x='623' y='400' transform='rotate(0 623,400)' title='Foreign Key fk_attribute_type_code
+	dic_attribute_value references dic_attribute_type ( attribute_type_code -> code )' style='fill:#a1a0a0;'>attribute_type_code</text><path transform='translate(7,0)' marker-start='url(#foot)' marker-end='url(#arrow)'  style='stroke-dasharray:4,2;'  d='M 945 285 L 1102,285 Q 1110,285 1110,277 L 1110,112 Q 1110,105 1102,105 L 1095,105' >
+	<title>Foreign Key fk_dic_attribute_type
+	dic_attribute_type references dic_taxonomy ( taxonomy_code -> code )</title>
+</path>
+<text x='952' y='280' transform='rotate(0 952,280)' title='Foreign Key fk_dic_attribute_type
+	dic_attribute_type references dic_taxonomy ( taxonomy_code -> code )' style='fill:#a1a0a0;'>taxonomy_code</text><path transform='translate(7,0)' marker-start='url(#foot)' marker-end='url(#arrow)'  style='stroke-dasharray:4,2;'  d='M 885 540 L 780,540' >
+	<title>Foreign Key fk_dic_qualifier_value
+	dic_qualifier_value references dic_qualifier_type ( qualifier_type_code -> code )</title>
+</path>
+<text x='792' y='535' transform='rotate(0 792,535)' title='Foreign Key fk_dic_qualifier_value
+	dic_qualifier_value references dic_qualifier_type ( qualifier_type_code -> code )' style='fill:#a1a0a0;'>qualifier_type_code</text><path transform='translate(7,0)' marker-start='url(#foot)'   style='stroke-dasharray:4,2;'  d='M 570 150 L 562,150 Q 555,150 555,157 L 555,232 Q 555,240 562,240 L 720,240' >
+	<title>Foreign Key fk_attribute_type_code
+	dic_hazard references dic_attribute_type ( attribute_type_code -> code )</title>
+</path>
+<text x='473' y='145' transform='rotate(0 473,145)' title='Foreign Key fk_attribute_type_code
+	dic_hazard references dic_attribute_type ( attribute_type_code -> code )' style='fill:#a1a0a0;'>attribute_type_code</text><path transform='translate(7,0)' marker-start='url(#foot)' marker-end='url(#arrow)'  style='stroke-dasharray:4,2;'  d='M 465 495 L 472,495 Q 480,495 480,487 L 480,292 Q 480,285 472,285 L 465,285' >
+	<title>Foreign Key fk_detail_gid
+	main_detail_qualifier references main_detail ( detail_id -> gid )</title>
+</path>
+<text x='472' y='490' transform='rotate(0 472,490)' title='Foreign Key fk_detail_gid
+	main_detail_qualifier references main_detail ( detail_id -> gid )' style='fill:#a1a0a0;'>detail_id</text><path transform='translate(7,0)' marker-start='url(#foot)' marker-end='url(#arrow)'  style='stroke-dasharray:4,2;'  d='M 465 510 L 532,510 Q 540,510 540,517 L 540,532 Q 540,540 547,540 L 555,540' >
+	<title>Foreign Key fk_qualifier_type_code
+	main_detail_qualifier references dic_qualifier_type ( qualifier_type_code -> code )</title>
+</path>
+<text x='472' y='505' transform='rotate(0 472,505)' title='Foreign Key fk_qualifier_type_code
+	main_detail_qualifier references dic_qualifier_type ( qualifier_type_code -> code )' style='fill:#a1a0a0;'>qualifier_type_code</text><path transform='translate(7,0)' marker-start='url(#foot)' marker-end='url(#arrow)'  style='stroke-dasharray:4,2;'  d='M 465 525 L 517,525 Q 525,525 525,532 L 525,607 Q 525,615 532,615 L 862,615 Q 870,615 870,607 L 870,562 Q 870,555 877,555 L 885,555' >
+	<title>Foreign Key fk_qualifier_value
+	main_detail_qualifier references dic_qualifier_value ( qualifier_value )</title>
+</path>
+<text x='472' y='520' transform='rotate(0 472,520)' title='Foreign Key fk_qualifier_value
+	main_detail_qualifier references dic_qualifier_value ( qualifier_value )' style='fill:#a1a0a0;'>qualifier_value</text><path transform='translate(7,0)' marker-start='url(#foot)' marker-end='url(#arrow)'  style='stroke-dasharray:4,2;'  d='M 465 300 L 487,300 Q 495,300 495,292 L 495,97 Q 495,90 487,90 L 465,90' >
+	<title>Foreign Key fk_object_gid
+	main_detail references main ( object_id -> gid )</title>
+</path>
+<text x='472' y='295' transform='rotate(0 472,295)' title='Foreign Key fk_object_gid
+	main_detail references main ( object_id -> gid )' style='fill:#a1a0a0;'>object_id</text><path transform='translate(7,0)' marker-start='url(#foot)'   style='stroke-dasharray:4,2;'  d='M 465 315 L 697,315 Q 705,315 705,307 L 705,300' >
+	<title>Foreign Key fk_attribute_type
+	main_detail references dic_attribute_type ( attribute_type_code -> code )</title>
+</path>
+<text x='472' y='310' transform='rotate(0 472,310)' title='Foreign Key fk_attribute_type
+	main_detail references dic_attribute_type ( attribute_type_code -> code )' style='fill:#a1a0a0;'>attribute_type_code</text><path transform='translate(7,0)' marker-start='url(#foot)' marker-end='url(#arrow)'  style='stroke-dasharray:4,2;'  d='M 465 330 L 682,330 Q 690,330 690,337 L 690,412 Q 690,420 697,420 L 720,420' >
+	<title>Foreign Key fk_attribute_value
+	main_detail references dic_attribute_value ( attribute_value )</title>
+</path>
+<text x='472' y='325' transform='rotate(0 472,325)' title='Foreign Key fk_attribute_value
+	main_detail references dic_attribute_value ( attribute_value )' style='fill:#a1a0a0;'>attribute_value</text><!-- ============= Table 've_resolution1' ============= -->
+<rect class='table' x='45' y='248' width='195' height='345' rx='7' ry='7' />
+<path d='M 45.50 274.50 L 45.50 255.50 Q 45.50 248.50 52.50 248.50 L 232.50 248.50 Q 239.50 248.50 239.50 255.50 L 239.50 274.50 L45.50 274.50 ' style='fill:url(#tableHeaderGradient0); stroke:none;' />
+<a xlink:href='#ve_resolution1'><text x='107' y='266' class='tableTitle'>ve_resolution1</text><title>View object_res1.ve_resolution1</title></a>
+  <a xlink:href='#gid'><text x='63' y='292'>gid</text><text x='191' y='292' class='colType'>integer</text><title>gid integer</title></a>
+  <a xlink:href='#survey_gid'><text x='63' y='307'>survey_gid</text><text x='191' y='307' class='colType'>integer</text><title>survey_gid integer</title></a>
+  <a xlink:href='#description'><text x='63' y='322'>description</text><text x='162' y='322' class='colType'>varchar(254)</text><title>description varchar&#040;254&#041;</title></a>
+  <a xlink:href='#source'><text x='63' y='337'>source</text><text x='205' y='337' class='colType'>text</text><title>source text</title></a>
+  <a xlink:href='#accuracy'><text x='63' y='352'>accuracy</text><text x='188' y='352' class='colType'>numeric</text><title>accuracy numeric</title></a>
+  <a xlink:href='#res2_id'><text x='63' y='367'>res2_id</text><text x='191' y='367' class='colType'>integer</text><title>res2_id integer</title></a>
+  <a xlink:href='#res3_id'><text x='63' y='382'>res3_id</text><text x='191' y='382' class='colType'>integer</text><title>res3_id integer</title></a>
+  <a xlink:href='#the_geom'><text x='63' y='397'>the_geom</text><text x='111' y='397' class='colType'>geometry(2147483647)</text><title>the_geom geometry&#040;2147483647&#041;</title></a>
+  <a xlink:href='#object_id'><text x='63' y='412'>object_id</text><text x='191' y='412' class='colType'>integer</text><title>object_id integer</title></a>
+  <a xlink:href='#attribute_type_code'><text x='63' y='427'>attribute_type_code</text><text x='162' y='427' class='colType'>varchar(254)</text><title>attribute_type_code varchar&#040;254&#041;</title></a>
+  <a xlink:href='#attribute_value'><text x='63' y='442'>attribute_value</text><text x='162' y='442' class='colType'>varchar(254)</text><title>attribute_value varchar&#040;254&#041;</title></a>
+  <a xlink:href='#attribute_numeric_1'><text x='63' y='457'>attribute_numeric_1</text><text x='188' y='457' class='colType'>numeric</text><title>attribute_numeric_1 numeric</title></a>
+  <a xlink:href='#attribute_numeric_2'><text x='63' y='472'>attribute_numeric_2</text><text x='188' y='472' class='colType'>numeric</text><title>attribute_numeric_2 numeric</title></a>
+  <a xlink:href='#attribute_text_1'><text x='63' y='487'>attribute_text_1</text><text x='162' y='487' class='colType'>varchar(254)</text><title>attribute_text_1 varchar&#040;254&#041;</title></a>
+  <a xlink:href='#detail_id'><text x='63' y='502'>detail_id</text><text x='191' y='502' class='colType'>integer</text><title>detail_id integer</title></a>
+  <a xlink:href='#qualifier_type_code'><text x='63' y='517'>qualifier_type_code</text><text x='162' y='517' class='colType'>varchar(254)</text><title>qualifier_type_code varchar&#040;254&#041;</title></a>
+  <a xlink:href='#qualifier_value'><text x='63' y='532'>qualifier_value</text><text x='162' y='532' class='colType'>varchar(254)</text><title>qualifier_value varchar&#040;254&#041;</title></a>
+  <a xlink:href='#qualifier_numeric_1'><text x='63' y='547'>qualifier_numeric_1</text><text x='188' y='547' class='colType'>numeric</text><title>qualifier_numeric_1 numeric</title></a>
+  <a xlink:href='#qualifier_text_1'><text x='63' y='562'>qualifier_text_1</text><text x='162' y='562' class='colType'>varchar(254)</text><title>qualifier_text_1 varchar&#040;254&#041;</title></a>
+  <a xlink:href='#qualifier_timestamp_1'><text x='63' y='577'>qualifier_timestamp_1</text><text x='167' y='577' class='colType'>timestamptz</text><title>qualifier_timestamp_1 timestamptz</title></a>
+
+<!-- ============= Table 'main' ============= -->
+<rect class='table' x='270' y='53' width='195' height='165' rx='7' ry='7' />
+<path d='M 270.50 79.50 L 270.50 60.50 Q 270.50 53.50 277.50 53.50 L 457.50 53.50 Q 464.50 53.50 464.50 60.50 L 464.50 79.50 L270.50 79.50 ' style='fill:url(#tableHeaderGradient0); stroke:none;' />
+<a xlink:href='#main'><text x='356' y='71' class='tableTitle'>main</text><title>Table object_res1.main
+The main object table for resolution 1 &#040;e&#046;g&#046; per building scale&#041;&#046; Contains basic information about the object&#046;</title></a>
+  <a xlink:href='#gid'><use id='pk' x='272' y='86' xlink:href='#pk'/><title>Primary Key  ( gid ) </title></a>
+<a xlink:href='#gid'><text x='288' y='97'>gid</text><text x='425' y='97' class='colType'>serial</text><title>gid serial not null
+Unique object identifier</title></a>
+<a xlink:href='#gid'><use id='ref' x='453' y='86' xlink:href='#ref'/><title>Referred by main_detail ( object_id -> gid ) </title></a>
+  <a xlink:href='#survey_gid'><text x='288' y='112'>survey_gid</text><text x='416' y='112' class='colType'>integer</text><title>survey_gid integer
+Identifier for the survey</title></a>
+  <a xlink:href='#description'><text x='288' y='127'>description</text><text x='387' y='127' class='colType'>varchar(254)</text><title>description varchar&#040;254&#041;
+Textual description of the object</title></a>
+  <a xlink:href='#source'><text x='288' y='142'>source</text><text x='430' y='142' class='colType'>text</text><title>source text
+Source of the object &#040;geometry&#041;</title></a>
+  <a xlink:href='#accuracy'><text x='288' y='157'>accuracy</text><text x='413' y='157' class='colType'>numeric</text><title>accuracy numeric
+Accuracy of the object &#040;geometry&#041;</title></a>
+  <a xlink:href='#res2_id'><text x='288' y='172'>res2_id</text><text x='416' y='172' class='colType'>integer</text><title>res2_id integer
+gid of the object at resolution level 2 &#040;e&#046;g&#046; neighbourhood scale&#041;</title></a>
+  <a xlink:href='#res3_id'><text x='288' y='187'>res3_id</text><text x='416' y='187' class='colType'>integer</text><title>res3_id integer
+gid of the object at resolution level 3 &#040;e&#046;g&#046; settlement scale&#041;</title></a>
+  <a xlink:href='#the_geom'><text x='288' y='202'>the_geom</text><text x='336' y='202' class='colType'>geometry(2147483647)</text><title>the_geom geometry&#040;2147483647&#041;
+Spatial reference and geometry information</title></a>
+
+<!-- ============= Table 'dic_attribute_value' ============= -->
+<rect class='table' x='735' y='353' width='210' height='120' rx='7' ry='7' />
+<path d='M 735.50 379.50 L 735.50 360.50 Q 735.50 353.50 742.50 353.50 L 937.50 353.50 Q 944.50 353.50 944.50 360.50 L 944.50 379.50 L735.50 379.50 ' style='fill:url(#tableHeaderGradient1); stroke:none;' />
+<a xlink:href='#dic_attribute_value'><text x='793' y='371' class='tableTitle'>dic_attribute_value</text><title>Table taxonomy.dic_attribute_value
+The attribute value dictionary table&#046; Contains information about the attribute values&#046;</title></a>
+  <a xlink:href='#gid'><use id='pk' x='737' y='386' xlink:href='#pk'/><title>Primary Key  ( gid ) </title></a>
+<a xlink:href='#gid'><text x='753' y='397'>gid</text><text x='905' y='397' class='colType'>serial</text><title>gid serial not null
+Unique attribute value identifier</title></a>
+  <a xlink:href='#attribute_type_code'><use id='idx' x='737' y='401' xlink:href='#idx'/><title>Index  ( attribute_type_code ) </title></a>
+<a xlink:href='#attribute_type_code'><text x='753' y='412'>attribute_type_code</text><text x='867' y='412' class='colType'>varchar(254)</text><title>attribute_type_code varchar&#040;254&#041;
+Code of the attribute type to which the value refers to</title></a>
+<a xlink:href='#attribute_type_code'><use id='fk' x='933' y='401' xlink:href='#fk'/><title>References dic_attribute_type ( attribute_type_code -> code ) </title></a>
+  <a xlink:href='#attribute_value'><use id='unq' x='737' y='416' xlink:href='#unq'/><title>Unique Index  ( attribute_value ) </title></a>
+<a xlink:href='#attribute_value'><text x='753' y='427'>attribute_value</text><text x='867' y='427' class='colType'>varchar(254)</text><title>attribute_value varchar&#040;254&#041;
+Value of the attribute</title></a>
+<a xlink:href='#attribute_value'><use id='ref' x='933' y='416' xlink:href='#ref'/><title>Referred by main_detail ( attribute_value ) 
+Referred by main_detail ( attribute_value ) 
+Referred by main_detail ( attribute_value ) </title></a>
+  <a xlink:href='#description'><text x='753' y='442'>description</text><text x='867' y='442' class='colType'>varchar(254)</text><title>description varchar&#040;254&#041;
+Short textual description of the attribute value</title></a>
+  <a xlink:href='#extended_description'><text x='753' y='457'>extended_description</text><text x='861' y='457' class='colType'>varchar(1024)</text><title>extended_description varchar&#040;1024&#041;
+Extended textual description of the attribute value</title></a>
+
+<!-- ============= Table 'dic_attribute_type' ============= -->
+<rect class='table' x='735' y='188' width='210' height='150' rx='7' ry='7' />
+<path d='M 735.50 214.50 L 735.50 195.50 Q 735.50 188.50 742.50 188.50 L 937.50 188.50 Q 944.50 188.50 944.50 195.50 L 944.50 214.50 L735.50 214.50 ' style='fill:url(#tableHeaderGradient1); stroke:none;' />
+<a xlink:href='#dic_attribute_type'><text x='795' y='206' class='tableTitle'>dic_attribute_type</text><title>Table taxonomy.dic_attribute_type
+The attribute type dictionary table&#046; Contains information about the attribute types&#046;</title></a>
+  <a xlink:href='#gid'><use id='pk' x='737' y='221' xlink:href='#pk'/><title>Primary Key  ( gid ) </title></a>
+<a xlink:href='#gid'><text x='753' y='232'>gid</text><text x='905' y='232' class='colType'>serial</text><title>gid serial not null
+Unique attribute type identifier</title></a>
+  <a xlink:href='#code'><use id='unq' x='737' y='236' xlink:href='#unq'/><title>Unique Index  ( code ) </title></a>
+<a xlink:href='#code'><text x='753' y='247'>code</text><text x='867' y='247' class='colType'>varchar(254)</text><title>code varchar&#040;254&#041;
+Code of the attribute type</title></a>
+<a xlink:href='#code'><use id='ref' x='933' y='236' xlink:href='#ref'/><title>Referred by main_detail ( attribute_type_code -> code ) 
+Referred by main_detail ( attribute_type_code -> code ) 
+Referred by main_detail ( attribute_type_code -> code ) 
+Referred by dic_attribute_value ( attribute_type_code -> code ) 
+Referred by dic_hazard ( attribute_type_code -> code ) </title></a>
+  <a xlink:href='#description'><text x='753' y='262'>description</text><text x='867' y='262' class='colType'>varchar(254)</text><title>description varchar&#040;254&#041;
+Short textual description of the attribute type</title></a>
+  <a xlink:href='#extended_description'><text x='753' y='277'>extended_description</text><text x='861' y='277' class='colType'>varchar(1024)</text><title>extended_description varchar&#040;1024&#041;
+Extended textual description of the attribute type</title></a>
+  <a xlink:href='#taxonomy_code'><use id='idx' x='737' y='281' xlink:href='#idx'/><title>Index  ( taxonomy_code ) </title></a>
+<a xlink:href='#taxonomy_code'><text x='753' y='292'>taxonomy_code</text><text x='867' y='292' class='colType'>varchar(254)</text><title>taxonomy_code varchar&#040;254&#041;
+Code of the taxonomy</title></a>
+<a xlink:href='#taxonomy_code'><use id='fk' x='933' y='281' xlink:href='#fk'/><title>References dic_taxonomy ( taxonomy_code -> code ) </title></a>
+  <a xlink:href='#attribute_level'><text x='753' y='307'>attribute_level</text><text x='895' y='307' class='colType'>smallint</text><title>attribute_level smallint
+Identifier of the attribute level &#040;e&#046;g&#046; GEM taxonomy&#058; 1 &#061; main attribute&#044; 2 &#061; secondary attribute&#044; 3 &#061; tertiary attribute&#041;</title></a>
+  <a xlink:href='#attribute_order'><text x='753' y='322'>attribute_order</text><text x='895' y='322' class='colType'>smallint</text><title>attribute_order smallint
+Order of the attribute type&#046; To be used for compiling a textual representation of the taxonomy attributes and their values which follows a predefined order &#040;e&#046;g&#046; GEM Taxonomy TaxT strings&#041;</title></a>
+
+<!-- ============= Table 'dic_qualifier_type' ============= -->
+<rect class='table' x='570' y='488' width='210' height='105' rx='7' ry='7' />
+<path d='M 570.50 514.50 L 570.50 495.50 Q 570.50 488.50 577.50 488.50 L 772.50 488.50 Q 779.50 488.50 779.50 495.50 L 779.50 514.50 L570.50 514.50 ' style='fill:url(#tableHeaderGradient1); stroke:none;' />
+<a xlink:href='#dic_qualifier_type'><text x='632' y='506' class='tableTitle'>dic_qualifier_type</text><title>Table taxonomy.dic_qualifier_type
+The qualifier type dictionary table&#046; Contains information about the qualifier types&#046;</title></a>
+  <a xlink:href='#gid'><use id='pk' x='572' y='521' xlink:href='#pk'/><title>Primary Key  ( gid ) </title></a>
+<a xlink:href='#gid'><text x='588' y='532'>gid</text><text x='740' y='532' class='colType'>serial</text><title>gid serial not null
+Unique qualifier type identifier</title></a>
+  <a xlink:href='#code'><use id='unq' x='572' y='536' xlink:href='#unq'/><title>Unique Index  ( code ) </title></a>
+<a xlink:href='#code'><text x='588' y='547'>code</text><text x='702' y='547' class='colType'>varchar(254)</text><title>code varchar&#040;254&#041;
+Code of the qualifier type</title></a>
+<a xlink:href='#code'><use id='ref' x='768' y='536' xlink:href='#ref'/><title>Referred by main_detail_qualifier ( qualifier_type_code -> code ) 
+Referred by main_detail_qualifier ( qualifier_type_code -> code ) 
+Referred by main_detail_qualifier ( qualifier_type_code -> code ) 
+Referred by dic_qualifier_value ( qualifier_type_code -> code ) </title></a>
+  <a xlink:href='#description'><text x='588' y='562'>description</text><text x='702' y='562' class='colType'>varchar(254)</text><title>description varchar&#040;254&#041;
+Short textual description of the qualifier type</title></a>
+  <a xlink:href='#extended_description'><text x='588' y='577'>extended_description</text><text x='696' y='577' class='colType'>varchar(1024)</text><title>extended_description varchar&#040;1024&#041;
+Extended textual description of the qualifier type</title></a>
+
+<!-- ============= Table 'dic_qualifier_value' ============= -->
+<rect class='table' x='900' y='488' width='210' height='120' rx='7' ry='7' />
+<path d='M 900.50 514.50 L 900.50 495.50 Q 900.50 488.50 907.50 488.50 L 1102.50 488.50 Q 1109.50 488.50 1109.50 495.50 L 1109.50 514.50 L900.50 514.50 ' style='fill:url(#tableHeaderGradient1); stroke:none;' />
+<a xlink:href='#dic_qualifier_value'><text x='960' y='506' class='tableTitle'>dic_qualifier_value</text><title>Table taxonomy.dic_qualifier_value
+The qualifier value dictionary table&#046; Contains information about the qualifier values&#046;</title></a>
+  <a xlink:href='#gid'><use id='pk' x='902' y='521' xlink:href='#pk'/><title>Primary Key  ( gid ) </title></a>
+<a xlink:href='#gid'><text x='918' y='532'>gid</text><text x='1070' y='532' class='colType'>serial</text><title>gid serial not null
+Unique qualifier value identifier</title></a>
+  <a xlink:href='#qualifier_type_code'><use id='idx' x='902' y='536' xlink:href='#idx'/><title>Index  ( qualifier_type_code ) </title></a>
+<a xlink:href='#qualifier_type_code'><text x='918' y='547'>qualifier_type_code</text><text x='1032' y='547' class='colType'>varchar(254)</text><title>qualifier_type_code varchar&#040;254&#041;
+Code of the qualifier type to which the value refers to</title></a>
+<a xlink:href='#qualifier_type_code'><use id='fk' x='1098' y='536' xlink:href='#fk'/><title>References dic_qualifier_type ( qualifier_type_code -> code ) </title></a>
+  <a xlink:href='#qualifier_value'><use id='unq' x='902' y='551' xlink:href='#unq'/><title>Unique Index  ( qualifier_value ) </title></a>
+<a xlink:href='#qualifier_value'><text x='918' y='562'>qualifier_value</text><text x='1032' y='562' class='colType'>varchar(254)</text><title>qualifier_value varchar&#040;254&#041;
+Value of the qualifier</title></a>
+<a xlink:href='#qualifier_value'><use id='ref' x='1098' y='551' xlink:href='#ref'/><title>Referred by main_detail_qualifier ( qualifier_value ) 
+Referred by main_detail_qualifier ( qualifier_value ) 
+Referred by main_detail_qualifier ( qualifier_value ) </title></a>
+  <a xlink:href='#description'><text x='918' y='577'>description</text><text x='1032' y='577' class='colType'>varchar(254)</text><title>description varchar&#040;254&#041;
+Short textual description of the qualifier value</title></a>
+  <a xlink:href='#extended_description'><text x='918' y='592'>extended_description</text><text x='1026' y='592' class='colType'>varchar(1024)</text><title>extended_description varchar&#040;1024&#041;
+Extended textual description of the qualifier value</title></a>
+
+<!-- ============= Table 'dic_taxonomy' ============= -->
+<rect class='table' x='885' y='53' width='210' height='120' rx='7' ry='7' />
+<path d='M 885.50 79.50 L 885.50 60.50 Q 885.50 53.50 892.50 53.50 L 1087.50 53.50 Q 1094.50 53.50 1094.50 60.50 L 1094.50 79.50 L885.50 79.50 ' style='fill:url(#tableHeaderGradient1); stroke:none;' />
+<a xlink:href='#dic_taxonomy'><text x='956' y='71' class='tableTitle'>dic_taxonomy</text><title>Table taxonomy.dic_taxonomy
+The taxonomy dictionary table&#046; Contains information about the taxonomy to which the attribute type is linked to&#046;</title></a>
+  <a xlink:href='#gid'><use id='pk' x='887' y='86' xlink:href='#pk'/><title>Primary Key  ( gid ) </title></a>
+<a xlink:href='#gid'><text x='903' y='97'>gid</text><text x='1055' y='97' class='colType'>serial</text><title>gid serial not null
+Unique taxonomy identifier</title></a>
+  <a xlink:href='#code'><use id='unq' x='887' y='101' xlink:href='#unq'/><title>Unique Index  ( code ) </title></a>
+<a xlink:href='#code'><text x='903' y='112'>code</text><text x='1017' y='112' class='colType'>varchar(254)</text><title>code varchar&#040;254&#041;
+Code of the taxonomy</title></a>
+<a xlink:href='#code'><use id='ref' x='1083' y='101' xlink:href='#ref'/><title>Referred by dic_attribute_type ( taxonomy_code -> code ) </title></a>
+  <a xlink:href='#description'><text x='903' y='127'>description</text><text x='1017' y='127' class='colType'>varchar(254)</text><title>description varchar&#040;254&#041;
+Short textual description of the taxonomy</title></a>
+  <a xlink:href='#extended_description'><text x='903' y='142'>extended_description</text><text x='1011' y='142' class='colType'>varchar(1024)</text><title>extended_description varchar&#040;1024&#041;
+Extended textual description of the taxonomy</title></a>
+  <a xlink:href='#version_date'><text x='903' y='157'>version_date</text><text x='1058' y='157' class='colType'>date</text><title>version_date date
+Version of the taxonomy &#040;date of the version&#041;</title></a>
+
+<!-- ============= Table 'dic_hazard' ============= -->
+<rect class='table' x='585' y='53' width='210' height='120' rx='7' ry='7' />
+<path d='M 585.50 79.50 L 585.50 60.50 Q 585.50 53.50 592.50 53.50 L 787.50 53.50 Q 794.50 53.50 794.50 60.50 L 794.50 79.50 L585.50 79.50 ' style='fill:url(#tableHeaderGradient1); stroke:none;' />
+<a xlink:href='#dic_hazard'><text x='664' y='71' class='tableTitle'>dic_hazard</text><title>Table taxonomy.dic_hazard
+The hazard dictionary table&#046; Contains information about the hazard type to which the taxonomy attribute type is linked to&#046;</title></a>
+  <a xlink:href='#gid'><use id='pk' x='587' y='86' xlink:href='#pk'/><title>Primary Key  ( gid ) </title></a>
+<a xlink:href='#gid'><text x='603' y='97'>gid</text><text x='755' y='97' class='colType'>serial</text><title>gid serial not null
+Unique hazard identifier</title></a>
+  <a xlink:href='#code'><text x='603' y='112'>code</text><text x='717' y='112' class='colType'>varchar(254)</text><title>code varchar&#040;254&#041;
+Identifier for the hazard type</title></a>
+  <a xlink:href='#description'><text x='603' y='127'>description</text><text x='717' y='127' class='colType'>varchar(254)</text><title>description varchar&#040;254&#041;
+Short textual description of the hazard type</title></a>
+  <a xlink:href='#extended_description'><text x='603' y='142'>extended_description</text><text x='711' y='142' class='colType'>varchar(1024)</text><title>extended_description varchar&#040;1024&#041;
+Extended textual description of the hazard type</title></a>
+  <a xlink:href='#attribute_type_code'><use id='idx' x='587' y='146' xlink:href='#idx'/><title>Index  ( attribute_type_code ) </title></a>
+<a xlink:href='#attribute_type_code'><text x='603' y='157'>attribute_type_code</text><text x='717' y='157' class='colType'>varchar(254)</text><title>attribute_type_code varchar&#040;254&#041;
+Code of the taxonomy attribute type to which the hazard type is linked to</title></a>
+<a xlink:href='#attribute_type_code'><use id='fk' x='783' y='146' xlink:href='#fk'/><title>References dic_attribute_type ( attribute_type_code -> code ) </title></a>
+
+<!-- ============= Table 'logged_actions' ============= -->
+<rect class='table' x='1170' y='53' width='210' height='225' rx='7' ry='7' />
+<path d='M 1170.50 79.50 L 1170.50 60.50 Q 1170.50 53.50 1177.50 53.50 L 1372.50 53.50 Q 1379.50 53.50 1379.50 60.50 L 1379.50 79.50 L1170.50 79.50 ' style='fill:url(#tableHeaderGradient1); stroke:none;' />
+<a xlink:href='#logged_actions'><text x='1239' y='71' class='tableTitle'>logged_actions</text><title>Table history.logged_actions
+History of transactions on activated tables&#044; from history&#046;if&#095;modified&#095;func&#040;&#041;&#046;</title></a>
+  <a xlink:href='#gid'><use id='pk' x='1172' y='86' xlink:href='#pk'/><title>Primary Key  ( gid ) </title></a>
+<a xlink:href='#gid'><text x='1188' y='97'>gid</text><text x='1326' y='97' class='colType'>bigserial</text><title>gid bigserial not null
+Unique log identifier</title></a>
+  <a xlink:href='#schema_name'><text x='1188' y='112'>schema_name</text><text x='1345' y='112' class='colType'>text</text><title>schema_name text not null
+Textual reference to the database schema which contains the modified table</title></a>
+  <a xlink:href='#table_name'><text x='1188' y='127'>table_name</text><text x='1345' y='127' class='colType'>text</text><title>table_name text not null
+Name of the modified table</title></a>
+  <a xlink:href='#table_id'><use id='idx' x='1172' y='131' xlink:href='#idx'/><title>Index  ( table_id ) </title></a>
+<a xlink:href='#table_id'><text x='1188' y='142'>table_id</text><text x='1331' y='142' class='colType'>oid(10)</text><title>table_id oid&#040;10&#041; not null
+OID of the modified table</title></a>
+  <a xlink:href='#transaction_id'><text x='1188' y='157'>transaction_id</text><text x='1339' y='157' class='colType'>bigint</text><title>transaction_id bigint
+Identifier of the transaction &#040;may differ from gid when more than one row is affected by a transaction query&#041;</title></a>
+  <a xlink:href='#transaction_user'><text x='1188' y='172'>transaction_user</text><text x='1345' y='172' class='colType'>text</text><title>transaction_user text
+Session user name who caused the transaction</title></a>
+  <a xlink:href='#transaction_time'><text x='1188' y='187'>transaction_time</text><text x='1307' y='187' class='colType'>timestamptz</text><title>transaction_time timestamptz not null
+Timestamp when transaction was started &#040;current&#095;timestamp&#041;</title></a>
+  <a xlink:href='#transaction_query'><text x='1188' y='202'>transaction_query</text><text x='1345' y='202' class='colType'>text</text><title>transaction_query text
+Transaction query</title></a>
+  <a xlink:href='#transaction_type'><use id='idx' x='1172' y='206' xlink:href='#idx'/><title>Index  ( transaction_type ) </title></a>
+<a xlink:href='#transaction_type'><text x='1188' y='217'>transaction_type</text><text x='1345' y='217' class='colType'>text</text><title>transaction_type text not null
+Transaction type &#040;I &#061; insert&#044; D &#061; delete&#044; U &#061; update&#044; T &#061; truncate&#041;</title></a>
+  <a xlink:href='#old_record'><text x='1188' y='232'>old_record</text><text x='1266' y='232' class='colType'>hstore(2147483647)</text><title>old_record hstore&#040;2147483647&#041;
+The old record before the modification containing all the values as hstore &#040;for DELETE and UPDATE statements&#041;</title></a>
+  <a xlink:href='#new_record'><text x='1188' y='247'>new_record</text><text x='1266' y='247' class='colType'>hstore(2147483647)</text><title>new_record hstore&#040;2147483647&#041;
+The new record after the modification containing all the values as hstore &#040;for INSERT and UPDATE statements&#041;</title></a>
+  <a xlink:href='#changed_fields'><text x='1188' y='262'>changed_fields</text><text x='1266' y='262' class='colType'>hstore(2147483647)</text><title>changed_fields hstore&#040;2147483647&#041;
+The modified fields only&#044; including the new values&#044; stored as hstore</title></a>
+
+<!-- ============= Table 'main_detail_qualifier' ============= -->
+<rect class='table' x='270' y='443' width='195' height='150' rx='7' ry='7' />
+<path d='M 270.50 469.50 L 270.50 450.50 Q 270.50 443.50 277.50 443.50 L 457.50 443.50 Q 464.50 443.50 464.50 450.50 L 464.50 469.50 L270.50 469.50 ' style='fill:url(#tableHeaderGradient0); stroke:none;' />
+<a xlink:href='#main_detail_qualifier'><text x='318' y='461' class='tableTitle'>main_detail_qualifier</text><title>Table object_res1.main_detail_qualifier
+The main object detail qualifier table&#046; Contains information about the object qualifiers&#046;</title></a>
+  <a xlink:href='#gid'><use id='pk' x='272' y='476' xlink:href='#pk'/><title>Primary Key  ( gid ) </title></a>
+<a xlink:href='#gid'><text x='288' y='487'>gid</text><text x='425' y='487' class='colType'>serial</text><title>gid serial not null
+Unique object detail qualifier identifier</title></a>
+  <a xlink:href='#detail_id'><use id='idx' x='272' y='491' xlink:href='#idx'/><title>Index  ( detail_id ) </title></a>
+<a xlink:href='#detail_id'><text x='288' y='502'>detail_id</text><text x='416' y='502' class='colType'>integer</text><title>detail_id integer
+Object detail identifier</title></a>
+<a xlink:href='#detail_id'><use id='fk' x='453' y='491' xlink:href='#fk'/><title>References main_detail ( detail_id -> gid ) </title></a>
+  <a xlink:href='#qualifier_type_code'><use id='idx' x='272' y='506' xlink:href='#idx'/><title>Index  ( qualifier_type_code ) </title></a>
+<a xlink:href='#qualifier_type_code'><text x='288' y='517'>qualifier_type_code</text><text x='387' y='517' class='colType'>varchar(254)</text><title>qualifier_type_code varchar&#040;254&#041;
+Code of the taxonomy qualifier type</title></a>
+<a xlink:href='#qualifier_type_code'><use id='fk' x='453' y='506' xlink:href='#fk'/><title>References dic_qualifier_type ( qualifier_type_code -> code ) </title></a>
+  <a xlink:href='#qualifier_value'><use id='idx' x='272' y='521' xlink:href='#idx'/><title>Index  ( qualifier_value ) </title></a>
+<a xlink:href='#qualifier_value'><text x='288' y='532'>qualifier_value</text><text x='387' y='532' class='colType'>varchar(254)</text><title>qualifier_value varchar&#040;254&#041;
+Value of the taxonomy qualifier type &#040;from look up table in taxonomy scheme&#041;</title></a>
+<a xlink:href='#qualifier_value'><use id='fk' x='453' y='521' xlink:href='#fk'/><title>References dic_qualifier_value ( qualifier_value ) </title></a>
+  <a xlink:href='#qualifier_numeric_1'><text x='288' y='547'>qualifier_numeric_1</text><text x='413' y='547' class='colType'>numeric</text><title>qualifier_numeric_1 numeric
+Value of the taxonomy qualifier type &#040;numeric&#041;</title></a>
+  <a xlink:href='#qualifier_text_1'><text x='288' y='562'>qualifier_text_1</text><text x='387' y='562' class='colType'>varchar(254)</text><title>qualifier_text_1 varchar&#040;254&#041;
+Value of the taxonomy qualifier type &#040;textual&#041;</title></a>
+  <a xlink:href='#qualifier_timestamp_1'><text x='288' y='577'>qualifier_timestamp_1</text><text x='392' y='577' class='colType'>timestamptz</text><title>qualifier_timestamp_1 timestamptz
+Value of the taxonomy qualifier type &#040;timestamp&#041;</title></a>
+
+<!-- ============= Table 'main_detail' ============= -->
+<rect class='table' x='270' y='248' width='195' height='150' rx='7' ry='7' />
+<path d='M 270.50 274.50 L 270.50 255.50 Q 270.50 248.50 277.50 248.50 L 457.50 248.50 Q 464.50 248.50 464.50 255.50 L 464.50 274.50 L270.50 274.50 ' style='fill:url(#tableHeaderGradient0); stroke:none;' />
+<a xlink:href='#main_detail'><text x='340' y='266' class='tableTitle'>main_detail</text><title>Table object_res1.main_detail
+The main object detail table&#046; Contains information about the object details&#046;</title></a>
+  <a xlink:href='#gid'><use id='pk' x='272' y='281' xlink:href='#pk'/><title>Primary Key  ( gid ) </title></a>
+<a xlink:href='#gid'><text x='288' y='292'>gid</text><text x='425' y='292' class='colType'>serial</text><title>gid serial not null
+Unique object detail identifier</title></a>
+<a xlink:href='#gid'><use id='ref' x='453' y='281' xlink:href='#ref'/><title>Referred by main_detail_qualifier ( detail_id -> gid ) </title></a>
+  <a xlink:href='#object_id'><use id='idx' x='272' y='296' xlink:href='#idx'/><title>Index  ( object_id ) </title></a>
+<a xlink:href='#object_id'><text x='288' y='307'>object_id</text><text x='416' y='307' class='colType'>integer</text><title>object_id integer
+Object identifier</title></a>
+<a xlink:href='#object_id'><use id='fk' x='453' y='296' xlink:href='#fk'/><title>References main ( object_id -> gid ) </title></a>
+  <a xlink:href='#attribute_type_code'><use id='idx' x='272' y='311' xlink:href='#idx'/><title>Index  ( attribute_type_code ) </title></a>
+<a xlink:href='#attribute_type_code'><text x='288' y='322'>attribute_type_code</text><text x='387' y='322' class='colType'>varchar(254)</text><title>attribute_type_code varchar&#040;254&#041;
+Code of the taxonomy attribute type</title></a>
+<a xlink:href='#attribute_type_code'><use id='fk' x='453' y='311' xlink:href='#fk'/><title>References dic_attribute_type ( attribute_type_code -> code ) </title></a>
+  <a xlink:href='#attribute_value'><use id='idx' x='272' y='326' xlink:href='#idx'/><title>Index  ( attribute_value ) </title></a>
+<a xlink:href='#attribute_value'><text x='288' y='337'>attribute_value</text><text x='387' y='337' class='colType'>varchar(254)</text><title>attribute_value varchar&#040;254&#041;
+Value of the taxonomy attribute type &#040;from look up table in taxonomy scheme&#041;</title></a>
+<a xlink:href='#attribute_value'><use id='fk' x='453' y='326' xlink:href='#fk'/><title>References dic_attribute_value ( attribute_value ) </title></a>
+  <a xlink:href='#attribute_numeric_1'><text x='288' y='352'>attribute_numeric_1</text><text x='413' y='352' class='colType'>numeric</text><title>attribute_numeric_1 numeric
+Value of the taxonomy attribute type &#040;numeric&#041;</title></a>
+  <a xlink:href='#attribute_numeric_2'><text x='288' y='367'>attribute_numeric_2</text><text x='413' y='367' class='colType'>numeric</text><title>attribute_numeric_2 numeric
+Value of the taxonomy attribute type &#040;numeric&#041;</title></a>
+  <a xlink:href='#attribute_text_1'><text x='288' y='382'>attribute_text_1</text><text x='387' y='382' class='colType'>varchar(254)</text><title>attribute_text_1 varchar&#040;254&#041;
+Value of the taxonomy attribute type &#040;textual&#041;</title></a>
+
+</g></svg>
+
+<br/><br/>
+<table id='dbs' >
+<thead>
+<tr><th colspan='3'><a name='dic_attribute_type'>dic_attribute_type</a></th></tr>
+<tr><td colspan='3'>The attribute type dictionary table&#046; Contains information about the attribute types&#046; </td></tr>
+</thead>
+<tbody>
+	<tr>
+		<td><a name='gid'>gid</a></td>
+		<td width='40%'> serial  NOT NULL  </td>
+		<td width='99%'> Unique attribute type identifier </td>
+	</tr>
+	<tr>
+		<td><a name='code'>code</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Code of the attribute type </td>
+	</tr>
+	<tr>
+		<td><a name='description'>description</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Short textual description of the attribute type </td>
+	</tr>
+	<tr>
+		<td><a name='extended_description'>extended&#095;description</a></td>
+		<td width='40%'> varchar&#040; 1024 &#041;   </td>
+		<td width='99%'> Extended textual description of the attribute type </td>
+	</tr>
+	<tr>
+		<td><a name='taxonomy_code'>taxonomy&#095;code</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Code of the taxonomy </td>
+	</tr>
+	<tr>
+		<td><a name='attribute_level'>attribute&#095;level</a></td>
+		<td width='40%'> smallint   </td>
+		<td width='99%'> Identifier of the attribute level &#040;e&#046;g&#046; GEM taxonomy&#058; 1 &#061; main attribute&#044; 2 &#061; secondary attribute&#044; 3 &#061; tertiary attribute&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='attribute_order'>attribute&#095;order</a></td>
+		<td width='40%'> smallint   </td>
+		<td width='99%'> Order of the attribute type&#046; To be used for compiling a textual representation of the taxonomy attributes and their values which follows a predefined order &#040;e&#046;g&#046; GEM Taxonomy TaxT strings&#041; </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Indexes</b></td></tr>
+	<tr>		<td>pk&#095;dic&#095;attribute&#095;type primary key</td>
+		<td> ON gid</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>idx&#095;dic&#095;attribute&#095;type unique</td>
+		<td> ON code</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>idx&#095;dic&#095;attribute&#095;type&#095;0 </td>
+		<td> ON taxonomy&#095;code</td>
+		<td>  </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Foreign Keys</b></td></tr>
+	<tr>
+		<td>fk_dic_attribute_type</td>
+		<td > ( taxonomy&#095;code ) ref <a href='#dic&#095;taxonomy'>dic&#095;taxonomy</a> (code) </td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<table id='dbs' >
+<thead>
+<tr><th colspan='3'><a name='dic_attribute_value'>dic_attribute_value</a></th></tr>
+<tr><td colspan='3'>The attribute value dictionary table&#046; Contains information about the attribute values&#046; </td></tr>
+</thead>
+<tbody>
+	<tr>
+		<td><a name='gid'>gid</a></td>
+		<td width='40%'> serial  NOT NULL  </td>
+		<td width='99%'> Unique attribute value identifier </td>
+	</tr>
+	<tr>
+		<td><a name='attribute_type_code'>attribute&#095;type&#095;code</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Code of the attribute type to which the value refers to </td>
+	</tr>
+	<tr>
+		<td><a name='attribute_value'>attribute&#095;value</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Value of the attribute </td>
+	</tr>
+	<tr>
+		<td><a name='description'>description</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Short textual description of the attribute value </td>
+	</tr>
+	<tr>
+		<td><a name='extended_description'>extended&#095;description</a></td>
+		<td width='40%'> varchar&#040; 1024 &#041;   </td>
+		<td width='99%'> Extended textual description of the attribute value </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Indexes</b></td></tr>
+	<tr>		<td>pk&#095;dic&#095;attribute&#095;value primary key</td>
+		<td> ON gid</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>pk&#095;dic&#095;attribute&#095;value&#095;0 unique</td>
+		<td> ON attribute&#095;value</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>idx&#095;dic&#095;attribute&#095;value </td>
+		<td> ON attribute&#095;type&#095;code</td>
+		<td>  </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Foreign Keys</b></td></tr>
+	<tr>
+		<td>fk_attribute_type_code</td>
+		<td > ( attribute&#095;type&#095;code ) ref <a href='#dic&#095;attribute&#095;type'>dic&#095;attribute&#095;type</a> (code) </td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<table id='dbs' >
+<thead>
+<tr><th colspan='3'><a name='dic_hazard'>dic_hazard</a></th></tr>
+<tr><td colspan='3'>The hazard dictionary table&#046; Contains information about the hazard type to which the taxonomy attribute type is linked to&#046; </td></tr>
+</thead>
+<tbody>
+	<tr>
+		<td><a name='gid'>gid</a></td>
+		<td width='40%'> serial  NOT NULL  </td>
+		<td width='99%'> Unique hazard identifier </td>
+	</tr>
+	<tr>
+		<td><a name='code'>code</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Identifier for the hazard type </td>
+	</tr>
+	<tr>
+		<td><a name='description'>description</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Short textual description of the hazard type </td>
+	</tr>
+	<tr>
+		<td><a name='extended_description'>extended&#095;description</a></td>
+		<td width='40%'> varchar&#040; 1024 &#041;   </td>
+		<td width='99%'> Extended textual description of the hazard type </td>
+	</tr>
+	<tr>
+		<td><a name='attribute_type_code'>attribute&#095;type&#095;code</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Code of the taxonomy attribute type to which the hazard type is linked to </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Indexes</b></td></tr>
+	<tr>		<td>pk&#095;hazard primary key</td>
+		<td> ON gid</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>idx&#095;hazard </td>
+		<td> ON attribute&#095;type&#095;code</td>
+		<td>  </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Foreign Keys</b></td></tr>
+	<tr>
+		<td>fk_attribute_type_code</td>
+		<td > ( attribute&#095;type&#095;code ) ref <a href='#dic&#095;attribute&#095;type'>dic&#095;attribute&#095;type</a> (code) </td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<table id='dbs' >
+<thead>
+<tr><th colspan='3'><a name='dic_qualifier_type'>dic_qualifier_type</a></th></tr>
+<tr><td colspan='3'>The qualifier type dictionary table&#046; Contains information about the qualifier types&#046; </td></tr>
+</thead>
+<tbody>
+	<tr>
+		<td><a name='gid'>gid</a></td>
+		<td width='40%'> serial  NOT NULL  </td>
+		<td width='99%'> Unique qualifier type identifier </td>
+	</tr>
+	<tr>
+		<td><a name='code'>code</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Code of the qualifier type </td>
+	</tr>
+	<tr>
+		<td><a name='description'>description</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Short textual description of the qualifier type </td>
+	</tr>
+	<tr>
+		<td><a name='extended_description'>extended&#095;description</a></td>
+		<td width='40%'> varchar&#040; 1024 &#041;   </td>
+		<td width='99%'> Extended textual description of the qualifier type </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Indexes</b></td></tr>
+	<tr>		<td>pk&#095;qualifier&#095;type primary key</td>
+		<td> ON gid</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>pk&#095;dic&#095;qualifier&#095;type unique</td>
+		<td> ON code</td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<table id='dbs' >
+<thead>
+<tr><th colspan='3'><a name='dic_qualifier_value'>dic_qualifier_value</a></th></tr>
+<tr><td colspan='3'>The qualifier value dictionary table&#046; Contains information about the qualifier values&#046; </td></tr>
+</thead>
+<tbody>
+	<tr>
+		<td><a name='gid'>gid</a></td>
+		<td width='40%'> serial  NOT NULL  </td>
+		<td width='99%'> Unique qualifier value identifier </td>
+	</tr>
+	<tr>
+		<td><a name='qualifier_type_code'>qualifier&#095;type&#095;code</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Code of the qualifier type to which the value refers to </td>
+	</tr>
+	<tr>
+		<td><a name='qualifier_value'>qualifier&#095;value</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Value of the qualifier </td>
+	</tr>
+	<tr>
+		<td><a name='description'>description</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Short textual description of the qualifier value </td>
+	</tr>
+	<tr>
+		<td><a name='extended_description'>extended&#095;description</a></td>
+		<td width='40%'> varchar&#040; 1024 &#041;   </td>
+		<td width='99%'> Extended textual description of the qualifier value </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Indexes</b></td></tr>
+	<tr>		<td>pk&#095;dic&#095;qualifier&#095;value primary key</td>
+		<td> ON gid</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>pk&#095;dic&#095;qualifier&#095;value&#095;0 unique</td>
+		<td> ON qualifier&#095;value</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>idx&#095;dic&#095;qualifier&#095;value </td>
+		<td> ON qualifier&#095;type&#095;code</td>
+		<td>  </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Foreign Keys</b></td></tr>
+	<tr>
+		<td>fk_dic_qualifier_value</td>
+		<td > ( qualifier&#095;type&#095;code ) ref <a href='#dic&#095;qualifier&#095;type'>dic&#095;qualifier&#095;type</a> (code) </td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<table id='dbs' >
+<thead>
+<tr><th colspan='3'><a name='dic_taxonomy'>dic_taxonomy</a></th></tr>
+<tr><td colspan='3'>The taxonomy dictionary table&#046; Contains information about the taxonomy to which the attribute type is linked to&#046; </td></tr>
+</thead>
+<tbody>
+	<tr>
+		<td><a name='gid'>gid</a></td>
+		<td width='40%'> serial  NOT NULL  </td>
+		<td width='99%'> Unique taxonomy identifier </td>
+	</tr>
+	<tr>
+		<td><a name='code'>code</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Code of the taxonomy </td>
+	</tr>
+	<tr>
+		<td><a name='description'>description</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Short textual description of the taxonomy </td>
+	</tr>
+	<tr>
+		<td><a name='extended_description'>extended&#095;description</a></td>
+		<td width='40%'> varchar&#040; 1024 &#041;   </td>
+		<td width='99%'> Extended textual description of the taxonomy </td>
+	</tr>
+	<tr>
+		<td><a name='version_date'>version&#095;date</a></td>
+		<td width='40%'> date   </td>
+		<td width='99%'> Version of the taxonomy &#040;date of the version&#041; </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Indexes</b></td></tr>
+	<tr>		<td>pk&#095;dic&#095;taxonomy primary key</td>
+		<td> ON gid</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>pk&#095;dic&#095;taxonomy&#095;0 unique</td>
+		<td> ON code</td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<table id='dbs' >
+<thead>
+<tr><th colspan='3'><a name='logged_actions'>logged_actions</a></th></tr>
+<tr><td colspan='3'>History of transactions on activated tables&#044; from history&#046;if&#095;modified&#095;func&#040;&#041;&#046; </td></tr>
+</thead>
+<tbody>
+	<tr>
+		<td><a name='gid'>gid</a></td>
+		<td width='40%'> bigserial  NOT NULL  </td>
+		<td width='99%'> Unique log identifier </td>
+	</tr>
+	<tr>
+		<td><a name='schema_name'>schema&#095;name</a></td>
+		<td width='40%'> text  NOT NULL  </td>
+		<td width='99%'> Textual reference to the database schema which contains the modified table </td>
+	</tr>
+	<tr>
+		<td><a name='table_name'>table&#095;name</a></td>
+		<td width='40%'> text  NOT NULL  </td>
+		<td width='99%'> Name of the modified table </td>
+	</tr>
+	<tr>
+		<td><a name='table_id'>table&#095;id</a></td>
+		<td width='40%'> oid&#040; 10 &#041;  NOT NULL  </td>
+		<td width='99%'> OID of the modified table </td>
+	</tr>
+	<tr>
+		<td><a name='transaction_id'>transaction&#095;id</a></td>
+		<td width='40%'> bigint   </td>
+		<td width='99%'> Identifier of the transaction &#040;may differ from gid when more than one row is affected by a transaction query&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='transaction_user'>transaction&#095;user</a></td>
+		<td width='40%'> text   </td>
+		<td width='99%'> Session user name who caused the transaction </td>
+	</tr>
+	<tr>
+		<td><a name='transaction_time'>transaction&#095;time</a></td>
+		<td width='40%'> timestamptz  NOT NULL  </td>
+		<td width='99%'> Timestamp when transaction was started &#040;current&#095;timestamp&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='transaction_query'>transaction&#095;query</a></td>
+		<td width='40%'> text   </td>
+		<td width='99%'> Transaction query </td>
+	</tr>
+	<tr>
+		<td><a name='transaction_type'>transaction&#095;type</a></td>
+		<td width='40%'> text  NOT NULL  </td>
+		<td width='99%'> Transaction type &#040;I &#061; insert&#044; D &#061; delete&#044; U &#061; update&#044; T &#061; truncate&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='old_record'>old&#095;record</a></td>
+		<td width='40%'> hstore&#040; 2147483647 &#041;   </td>
+		<td width='99%'> The old record before the modification containing all the values as hstore &#040;for DELETE and UPDATE statements&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='new_record'>new&#095;record</a></td>
+		<td width='40%'> hstore&#040; 2147483647 &#041;   </td>
+		<td width='99%'> The new record after the modification containing all the values as hstore &#040;for INSERT and UPDATE statements&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='changed_fields'>changed&#095;fields</a></td>
+		<td width='40%'> hstore&#040; 2147483647 &#041;   </td>
+		<td width='99%'> The modified fields only&#044; including the new values&#044; stored as hstore </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Indexes</b></td></tr>
+	<tr>		<td>logged&#095;actions&#095;pkey primary key</td>
+		<td> ON gid</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>logged&#095;changes&#095;action&#095;idx </td>
+		<td> ON transaction&#095;type</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>logged&#095;changes&#095;table&#095;id&#095;idx </td>
+		<td> ON table&#095;id</td>
+		<td>  </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Constraints</b></td></tr>
+	<tr>
+		<td> logged_actions_transaction_type_check </td><td> transaction&#095;type &#061; ANY &#040;ARRAY&#091;&#039;I&#039;&#058;&#058;text&#044; &#039;D&#039;&#058;&#058;text&#044; &#039;U&#039;&#058;&#058;text&#044; &#039;T&#039;&#058;&#058;text&#093;&#041; </td><td> </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<table id='dbs' >
+<thead>
+<tr><th colspan='3'><a name='main'>main</a></th></tr>
+<tr><td colspan='3'>The main object table for resolution 1 &#040;e&#046;g&#046; per building scale&#041;&#046; Contains basic information about the object&#046; </td></tr>
+</thead>
+<tbody>
+	<tr>
+		<td><a name='gid'>gid</a></td>
+		<td width='40%'> serial  NOT NULL  </td>
+		<td width='99%'> Unique object identifier </td>
+	</tr>
+	<tr>
+		<td><a name='survey_gid'>survey&#095;gid</a></td>
+		<td width='40%'> integer   </td>
+		<td width='99%'> Identifier for the survey </td>
+	</tr>
+	<tr>
+		<td><a name='description'>description</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Textual description of the object </td>
+	</tr>
+	<tr>
+		<td><a name='source'>source</a></td>
+		<td width='40%'> text   </td>
+		<td width='99%'> Source of the object &#040;geometry&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='accuracy'>accuracy</a></td>
+		<td width='40%'> numeric   </td>
+		<td width='99%'> Accuracy of the object &#040;geometry&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='res2_id'>res2&#095;id</a></td>
+		<td width='40%'> integer   </td>
+		<td width='99%'> gid of the object at resolution level 2 &#040;e&#046;g&#046; neighbourhood scale&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='res3_id'>res3&#095;id</a></td>
+		<td width='40%'> integer   </td>
+		<td width='99%'> gid of the object at resolution level 3 &#040;e&#046;g&#046; settlement scale&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='the_geom'>the&#095;geom</a></td>
+		<td width='40%'> geometry&#040; 2147483647 &#041;   </td>
+		<td width='99%'> Spatial reference and geometry information </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Indexes</b></td></tr>
+	<tr>		<td>pk&#095;main&#095;0 primary key</td>
+		<td> ON gid</td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<table id='dbs' >
+<thead>
+<tr><th colspan='3'><a name='main_detail'>main_detail</a></th></tr>
+<tr><td colspan='3'>The main object detail table&#046; Contains information about the object details&#046; </td></tr>
+</thead>
+<tbody>
+	<tr>
+		<td><a name='gid'>gid</a></td>
+		<td width='40%'> serial  NOT NULL  </td>
+		<td width='99%'> Unique object detail identifier </td>
+	</tr>
+	<tr>
+		<td><a name='object_id'>object&#095;id</a></td>
+		<td width='40%'> integer   </td>
+		<td width='99%'> Object identifier </td>
+	</tr>
+	<tr>
+		<td><a name='attribute_type_code'>attribute&#095;type&#095;code</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Code of the taxonomy attribute type </td>
+	</tr>
+	<tr>
+		<td><a name='attribute_value'>attribute&#095;value</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Value of the taxonomy attribute type &#040;from look up table in taxonomy scheme&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='attribute_numeric_1'>attribute&#095;numeric&#095;1</a></td>
+		<td width='40%'> numeric   </td>
+		<td width='99%'> Value of the taxonomy attribute type &#040;numeric&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='attribute_numeric_2'>attribute&#095;numeric&#095;2</a></td>
+		<td width='40%'> numeric   </td>
+		<td width='99%'> Value of the taxonomy attribute type &#040;numeric&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='attribute_text_1'>attribute&#095;text&#095;1</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Value of the taxonomy attribute type &#040;textual&#041; </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Indexes</b></td></tr>
+	<tr>		<td>pk&#095;object primary key</td>
+		<td> ON gid</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>idx&#095;main </td>
+		<td> ON attribute&#095;value</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>idx&#095;main&#095;detail </td>
+		<td> ON object&#095;id</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>pk&#095;main </td>
+		<td> ON attribute&#095;type&#095;code</td>
+		<td>  </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Foreign Keys</b></td></tr>
+	<tr>
+		<td>fk_object_gid</td>
+		<td > ( object&#095;id ) ref <a href='#main'>main</a> (gid) </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>fk_attribute_type</td>
+		<td > ( attribute&#095;type&#095;code ) ref <a href='#dic&#095;attribute&#095;type'>dic&#095;attribute&#095;type</a> (code) </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>fk_attribute_value</td>
+		<td > ( attribute&#095;value ) ref <a href='#dic&#095;attribute&#095;value'>dic&#095;attribute&#095;value</a> (attribute&#095;value) </td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<table id='dbs' >
+<thead>
+<tr><th colspan='3'><a name='main_detail_qualifier'>main_detail_qualifier</a></th></tr>
+<tr><td colspan='3'>The main object detail qualifier table&#046; Contains information about the object qualifiers&#046; </td></tr>
+</thead>
+<tbody>
+	<tr>
+		<td><a name='gid'>gid</a></td>
+		<td width='40%'> serial  NOT NULL  </td>
+		<td width='99%'> Unique object detail qualifier identifier </td>
+	</tr>
+	<tr>
+		<td><a name='detail_id'>detail&#095;id</a></td>
+		<td width='40%'> integer   </td>
+		<td width='99%'> Object detail identifier </td>
+	</tr>
+	<tr>
+		<td><a name='qualifier_type_code'>qualifier&#095;type&#095;code</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Code of the taxonomy qualifier type </td>
+	</tr>
+	<tr>
+		<td><a name='qualifier_value'>qualifier&#095;value</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Value of the taxonomy qualifier type &#040;from look up table in taxonomy scheme&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='qualifier_numeric_1'>qualifier&#095;numeric&#095;1</a></td>
+		<td width='40%'> numeric   </td>
+		<td width='99%'> Value of the taxonomy qualifier type &#040;numeric&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='qualifier_text_1'>qualifier&#095;text&#095;1</a></td>
+		<td width='40%'> varchar&#040; 254 &#041;   </td>
+		<td width='99%'> Value of the taxonomy qualifier type &#040;textual&#041; </td>
+	</tr>
+	<tr>
+		<td><a name='qualifier_timestamp_1'>qualifier&#095;timestamp&#095;1</a></td>
+		<td width='40%'> timestamptz   </td>
+		<td width='99%'> Value of the taxonomy qualifier type &#040;timestamp&#041; </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Indexes</b></td></tr>
+	<tr>		<td>pk&#095;main&#095;detail&#095;qualifier primary key</td>
+		<td> ON gid</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>idx&#095;main&#095;detail&#095;qualifier </td>
+		<td> ON detail&#095;id</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>idx&#095;main&#095;detail&#095;qualifier&#095;0 </td>
+		<td> ON qualifier&#095;type&#095;code</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td>idx&#095;main&#095;detail&#095;qualifier&#095;1 </td>
+		<td> ON qualifier&#095;value</td>
+		<td>  </td>
+	</tr>
+<tr><td colspan='3' class='subpart'><b>Foreign Keys</b></td></tr>
+	<tr>
+		<td>fk_detail_gid</td>
+		<td > ( detail&#095;id ) ref <a href='#main&#095;detail'>main&#095;detail</a> (gid) </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>fk_qualifier_type_code</td>
+		<td > ( qualifier&#095;type&#095;code ) ref <a href='#dic&#095;qualifier&#095;type'>dic&#095;qualifier&#095;type</a> (code) </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>fk_qualifier_value</td>
+		<td > ( qualifier&#095;value ) ref <a href='#dic&#095;qualifier&#095;value'>dic&#095;qualifier&#095;value</a> (qualifier&#095;value) </td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table>
+
+<br/><br/>
+<table id='dbs'  >
+<thead>
+	<tr>
+		<th><a name='ve_resolution1'>View ve_resolution1</a></th>
+</thead>
+<tbody>
+	<tr><td>SELECT a&#046;gid&#044; a&#046;survey&#095;gid&#044; a&#046;description&#044; a&#046;source&#044; a&#046;accuracy&#044; a&#046;res2&#095;id&#044; a&#046;res3&#095;id&#044; a&#046;the&#095;geom&#044; b&#046;object&#095;id&#044; b&#046;attribute&#095;type&#095;code&#044; b&#046;attribute&#095;value&#044; b&#046;attribute&#095;numeric&#095;1&#044; b&#046;attribute&#095;numeric&#095;2&#044; b&#046;attribute&#095;text&#095;1&#044; c&#046;detail&#095;id&#044; c&#046;qualifier&#095;type&#095;code&#044; c&#046;qualifier&#095;value&#044; c&#046;qualifier&#095;numeric&#095;1&#044; c&#046;qualifier&#095;text&#095;1&#044; c&#046;qualifier&#095;timestamp&#095;1 FROM &#040;&#040;object&#095;res1&#046;main a JOIN object&#095;res1&#046;main&#095;detail b ON &#040;&#040;a&#046;gid &#061; b&#046;object&#095;id&#041;&#041;&#041; JOIN object&#095;res1&#046;main&#095;detail&#095;qualifier c ON &#040;&#040;b&#046;gid &#061; c&#046;detail&#095;id&#041;&#041;&#041; ORDER BY a&#046;gid&#059;</td></tr>
+</tbody>
+</table>
+</body></html>

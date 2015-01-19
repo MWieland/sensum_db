@@ -1,0 +1,979 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="PostgreSQL" id="Project1172545" database="PostgreSQL" >
+	<schema name="history" catalogname="sensum_db_v092" schemaname="history" defo="y" >
+		<table name="logged_actions" >
+			<comment>History of transactions on activated tables, from history.if_modified_func().</comment>
+			<column name="gid" type="bigserial" length="19" jt="-5" mandatory="y" >
+				<comment><![CDATA[Unique log identifier]]></comment>
+			</column>
+			<column name="schema_name" type="text" length="2147483647" jt="12" mandatory="y" >
+				<comment><![CDATA[Textual reference to the database schema which contains the modified table]]></comment>
+			</column>
+			<column name="table_name" type="text" length="2147483647" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the modified table]]></comment>
+			</column>
+			<column name="table_id" type="oid" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[OID of the modified table]]></comment>
+			</column>
+			<column name="transaction_id" type="bigint" length="19" jt="-5" >
+				<comment><![CDATA[Identifier of the transaction (may differ from gid when more than one row is affected by a transaction query)]]></comment>
+			</column>
+			<column name="transaction_user" type="text" length="2147483647" jt="12" >
+				<comment><![CDATA[Session user name who caused the transaction]]></comment>
+			</column>
+			<column name="transaction_time" type="timestamptz" length="35" decimal="6" jt="93" mandatory="y" >
+				<comment><![CDATA[Timestamp when transaction was started (current_timestamp)]]></comment>
+			</column>
+			<column name="transaction_query" type="text" length="2147483647" jt="12" >
+				<comment><![CDATA[Transaction query]]></comment>
+			</column>
+			<column name="transaction_type" type="text" length="2147483647" jt="12" mandatory="y" >
+				<comment><![CDATA[Transaction type (I = insert, D = delete, U = update, T = truncate)]]></comment>
+			</column>
+			<column name="old_record" type="hstore" length="2147483647" jt="1111" >
+				<comment><![CDATA[The old record before the modification containing all the values as hstore (for DELETE and UPDATE statements)]]></comment>
+			</column>
+			<column name="new_record" type="hstore" length="2147483647" jt="1111" >
+				<comment><![CDATA[The new record after the modification containing all the values as hstore (for INSERT and UPDATE statements)]]></comment>
+			</column>
+			<column name="changed_fields" type="hstore" length="2147483647" jt="1111" >
+				<comment><![CDATA[The modified fields only, including the new values, stored as hstore]]></comment>
+			</column>
+			<index name="logged_actions_pkey" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="logged_changes_action_idx" unique="NORMAL" >
+				<column name="transaction_type" />
+			</index>
+			<index name="logged_changes_table_id_idx" unique="NORMAL" >
+				<column name="table_id" />
+			</index>
+			<constraint name="logged_actions_transaction_type_check" >
+				<string>transaction_type = ANY (ARRAY[&#039;I&#039;::text, &#039;D&#039;::text, &#039;U&#039;::text, &#039;T&#039;::text])</string>
+			</constraint>
+		</table>
+		<sequence name="logged_actions_gid_seq" start="1" />
+		<function name="history_table" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+ADD transaction logging support TO a TABLE.
+
+Arguments:
+   target_table:       TABLE name, schema qualified IF NOT ON search_path
+   history_view:       Activate trigger for view (true) or for table (false)
+   history_query_text: Record the text of the client query that triggered the history event?
+   ignored_cols:       COLUMNS TO exclude FROM UPDATE diffs, IGNORE updates that CHANGE only ignored cols.
+]]></comment>
+		</function>
+		<function name="history_table_001" id="Function1180497" isSystem="false" />
+		<function name="history_table_002" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+ADD auditing support TO the given TABLE. Row-level changes will be logged WITH FULL query text. No cols are ignored.
+]]></comment>
+		</function>
+		<function name="if_modified" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+Track changes TO a TABLE or a VIEW at the row level.
+Optional parameters TO TRIGGER IN CREATE TRIGGER call:
+param 0: BOOLEAN, whether TO log the query text. DEFAULT 't'.
+param 1: text[], COLUMNS TO IGNORE IN updates. DEFAULT [].
+
+         Note: Updates TO ignored cols are included in new_record.
+         Updates WITH only ignored cols changed are NOT inserted
+         INTO the history log.
+         There IS no parameter TO disable logging of VALUES. ADD this TRIGGER AS
+         a 'FOR EACH STATEMENT' rather than 'FOR EACH ROW' TRIGGER IF you do NOT
+         want TO log row VALUES.
+]]></comment>
+		</function>
+		<function name="if_modified_view" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function updates the gid of a view in the logged actions table for the INSERT statement.
+]]></comment>
+		</function>
+		<function name="ttime_equal" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get the latest version of each object primitive whose transaction time equals the queried timestamp.
+Arguments:
+   tbl:		schema.table character varying
+   ttime:	transaction time yyy-mm-dd hh:mm:ss
+]]></comment>
+		</function>
+		<function name="ttime_equal_001" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get the latest version of each object primitive whose transaction time equals the queried timestamp. 
+Results table structure is defined dynamically from input table/view. Returns view.
+Arguments:
+   tbl_in:		schema.table character varying
+   tbl_out:		schema.table character varying
+   ttime:	transaction time yyy-mm-dd hh:mm:ss
+]]></comment>
+		</function>
+		<function name="ttime_gethistory" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get all transactions of object primitives. Results table structure needs to be defined manually. Returns set of records.
+Arguments:
+   tbl:		schema.table character varying
+]]></comment>
+		</function>
+		<function name="ttime_gethistory_001" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get all transactions of object primitives. Results table structure is defined dynamically from input table/view. Returns view.
+Arguments:
+   tbl_in:		schema.table character varying
+   tbl_out:		schema.table character varying
+]]></comment>
+		</function>
+		<function name="ttime_inside" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get the latest version of each object primitive that has been modified only within the queried transaction time.
+Results table structure needs to be defined manually. Returns set of records.
+Arguments:
+   tbl:		schema.table character varying
+   ttime_from:	transaction time from yyy-mm-dd hh:mm:ss
+   ttime_to:	transaction time to yyy-mm-dd hh:mm:ss
+]]></comment>
+		</function>
+		<function name="ttime_inside_001" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get the latest version of each object primitive that has been modified only within the queried transaction time.
+Results table structure is defined dynamically from input table/view. Returns view.
+Arguments:
+   tbl_in:		schema.table character varying
+   tbl_out:		schema.table character varying
+   ttime_from:	transaction time from yyy-mm-dd hh:mm:ss
+   ttime_to:	transaction time to yyy-mm-dd hh:mm:ss
+]]></comment>
+		</function>
+		<function name="vtime_equal" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get the latest version of each object primitive whose valid time range equals the queried timerange.
+Results table structure needs to be defined manually. Returns set of records.
+
+Arguments:
+   tbl:			table/view that holds the valid time columns character varying
+   col_value:		column that holds the qualifier values (BUILT, MODIF, DESTR) character varying
+   col_vtime:		column that holds the actual valid time character varying
+   vtime_from:		valid time from text
+   vtime_to:		valid time to text
+]]></comment>
+		</function>
+		<function name="vtime_equal_001" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get the latest version of each object primitive whose valid time range equals the queried timerange.
+Results table structure is defined dynamically from input table/view. Returns view.
+Arguments:
+   tbl_in:		schema.table character varying
+   tbl_out:		schema.table character varying
+   col_value:		column that holds the qualifier values (BUILT, MODIF, DESTR) character varying
+   col_vtime:		column that holds the actual valid time character varying
+   vtime_from:		valid time from text
+   vtime_to:		valid time to text
+]]></comment>
+		</function>
+		<function name="vtime_gethistory" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get all real world changes with the corresponding latest version for each object primitive at each valid time.
+Results table structure needs to be defined manually. Returns set of records.
+
+Arguments:
+   tbl:			table/view that holds the valid time columns character varying
+   col_value:		column that holds the qualifier values (BUILT, MODIF, DESTR) character varying
+   col_vtime:		column that holds the actual valid time character varying
+]]></comment>
+		</function>
+		<function name="vtime_gethistory_001" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get all real world changes with the corresponding latest version for each object primitive at each valid time.
+Results table structure is defined dynamically from input table/view. Returns view.
+Arguments:
+   tbl_in:		schema.table character varying
+   tbl_out:		schema.table character varying
+   col_value:		column that holds the qualifier values (BUILT, MODIF, DESTR) character varying
+   col_vtime:		column that holds the actual valid time character varying
+]]></comment>
+		</function>
+		<function name="vtime_inside" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get the latest version of each object primitive whose valid time is completely inside the queried timerange.
+Results table structure needs to be defined manually. Returns set of records.
+
+Arguments:
+   tbl:			table/view that holds the valid time columns character varying
+   col_value:		column that holds the qualifier values (BUILT, MODIF, DESTR) character varying
+   col_vtime:		column that holds the actual valid time character varying
+   vtime_from:		valid time from text
+   vtime_to:		valid time to text
+]]></comment>
+		</function>
+		<function name="vtime_inside_001" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get the latest version of each object primitive whose valid time is completely inside the queried timerange.
+Results table structure is defined dynamically from input table/view. Returns view.
+Arguments:
+   tbl_in:		schema.table character varying
+   tbl_out:		schema.table character varying
+   col_value:		column that holds the qualifier values (BUILT, MODIF, DESTR) character varying
+   col_vtime:		column that holds the actual valid time character varying
+   vtime_from:		valid time from text
+   vtime_to:		valid time to text
+]]></comment>
+		</function>
+		<function name="vtime_intersect" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get the latest version of each object primitive whose valid time intersects with the queried timerange.
+Results table structure needs to be defined manually. Returns set of records.
+
+Arguments:
+   tbl:			table/view that holds the valid time columns character varying
+   col_value:		column that holds the qualifier values (BUILT, MODIF, DESTR) character varying
+   col_vtime:		column that holds the actual valid time character varying
+   vtime_from:		valid time from text
+   vtime_to:		valid time to text
+]]></comment>
+		</function>
+		<function name="vtime_intersect_001" id="Function1180497" isSystem="false" >
+			<comment><![CDATA[
+This function searches history.logged_actions to get the latest version of each object primitive whose valid time intersects with the queried timerange.
+Results table structure is defined dynamically from input table/view. Returns view.
+Arguments:
+   tbl_in:		schema.table character varying
+   tbl_out:		schema.table character varying
+   col_value:		column that holds the qualifier values (BUILT, MODIF, DESTR) character varying
+   col_vtime:		column that holds the actual valid time character varying
+   vtime_from:		valid time from text
+   vtime_to:		valid time to text
+]]></comment>
+		</function>
+	</schema>
+	<schema name="object_res1" catalogname="sensum_db_v092" schemaname="object_res1" defo="y" >
+		<table name="main" >
+			<comment>The main object table for resolution 1 (e.g. per building scale). Contains basic information about the object.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique object identifier]]></comment>
+			</column>
+			<column name="survey_gid" type="integer" length="10" jt="4" >
+				<comment><![CDATA[Identifier for the survey]]></comment>
+			</column>
+			<column name="description" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Textual description of the object]]></comment>
+			</column>
+			<column name="source" type="text" length="2147483647" jt="12" >
+				<comment><![CDATA[Source of the object (geometry)]]></comment>
+			</column>
+			<column name="accuracy" type="numeric" jt="2" >
+				<comment><![CDATA[Accuracy of the object (geometry)]]></comment>
+			</column>
+			<column name="res2_id" type="integer" length="10" jt="4" >
+				<comment><![CDATA[gid of the object at resolution level 2 (e.g. neighbourhood scale)]]></comment>
+			</column>
+			<column name="res3_id" type="integer" length="10" jt="4" >
+				<comment><![CDATA[gid of the object at resolution level 3 (e.g. settlement scale)]]></comment>
+			</column>
+			<column name="the_geom" type="geometry" length="2147483647" jt="1111" >
+				<comment><![CDATA[Spatial reference and geometry information]]></comment>
+			</column>
+			<index name="pk_main_0" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+		</table>
+		<table name="main_detail" >
+			<comment>The main object detail table. Contains information about the object details.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique object detail identifier]]></comment>
+			</column>
+			<column name="object_id" type="integer" length="10" jt="4" >
+				<comment><![CDATA[Object identifier]]></comment>
+			</column>
+			<column name="attribute_type_code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the taxonomy attribute type]]></comment>
+			</column>
+			<column name="attribute_value" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the taxonomy attribute type (from look up table in taxonomy scheme)]]></comment>
+			</column>
+			<column name="attribute_numeric_1" type="numeric" jt="2" >
+				<comment><![CDATA[Value of the taxonomy attribute type (numeric)]]></comment>
+			</column>
+			<column name="attribute_numeric_2" type="numeric" jt="2" >
+				<comment><![CDATA[Value of the taxonomy attribute type (numeric)]]></comment>
+			</column>
+			<column name="attribute_text_1" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the taxonomy attribute type (textual)]]></comment>
+			</column>
+			<index name="pk_object" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="idx_main" unique="NORMAL" >
+				<column name="attribute_value" />
+			</index>
+			<index name="idx_main_detail" unique="NORMAL" >
+				<column name="object_id" />
+			</index>
+			<index name="pk_main" unique="NORMAL" >
+				<column name="attribute_type_code" />
+			</index>
+			<fk name="fk_object_gid" to_schema="object_res1" to_table="main" >
+				<fk_column name="object_id" pk="gid" />
+			</fk>
+			<fk name="fk_attribute_type" to_schema="taxonomy" to_table="dic_attribute_type" >
+				<fk_column name="attribute_type_code" pk="code" />
+			</fk>
+			<fk name="fk_attribute_value" to_schema="taxonomy" to_table="dic_attribute_value" >
+				<fk_column name="attribute_value" pk="attribute_value" />
+			</fk>
+		</table>
+		<table name="main_detail_qualifier" >
+			<comment>The main object detail qualifier table. Contains information about the object qualifiers.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique object detail qualifier identifier]]></comment>
+			</column>
+			<column name="detail_id" type="integer" length="10" jt="4" >
+				<comment><![CDATA[Object detail identifier]]></comment>
+			</column>
+			<column name="qualifier_type_code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the taxonomy qualifier type]]></comment>
+			</column>
+			<column name="qualifier_value" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the taxonomy qualifier type (from look up table in taxonomy scheme)]]></comment>
+			</column>
+			<column name="qualifier_numeric_1" type="numeric" jt="2" >
+				<comment><![CDATA[Value of the taxonomy qualifier type (numeric)]]></comment>
+			</column>
+			<column name="qualifier_text_1" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the taxonomy qualifier type (textual)]]></comment>
+			</column>
+			<column name="qualifier_timestamp_1" type="timestamptz" length="35" decimal="6" jt="93" >
+				<comment><![CDATA[Value of the taxonomy qualifier type (timestamp)]]></comment>
+			</column>
+			<index name="pk_main_detail_qualifier" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="idx_main_detail_qualifier" unique="NORMAL" >
+				<column name="detail_id" />
+			</index>
+			<index name="idx_main_detail_qualifier_0" unique="NORMAL" >
+				<column name="qualifier_type_code" />
+			</index>
+			<index name="idx_main_detail_qualifier_1" unique="NORMAL" >
+				<column name="qualifier_value" />
+			</index>
+			<fk name="fk_detail_gid" to_schema="object_res1" to_table="main_detail" >
+				<fk_column name="detail_id" pk="gid" />
+			</fk>
+			<fk name="fk_qualifier_type_code" to_schema="taxonomy" to_table="dic_qualifier_type" >
+				<fk_column name="qualifier_type_code" pk="code" />
+			</fk>
+			<fk name="fk_qualifier_value" to_schema="taxonomy" to_table="dic_qualifier_value" >
+				<fk_column name="qualifier_value" pk="qualifier_value" />
+			</fk>
+		</table>
+		<view name="ve_resolution1" >
+			<view_script><![CDATA[SELECT a.gid, a.survey_gid, a.description, a.source, a.accuracy, a.res2_id, a.res3_id, a.the_geom, b.object_id, b.attribute_type_code, b.attribute_value, b.attribute_numeric_1, b.attribute_numeric_2, b.attribute_text_1, c.detail_id, c.qualifier_type_code, c.qualifier_value, c.qualifier_numeric_1, c.qualifier_text_1, c.qualifier_timestamp_1 FROM ((object_res1.main a JOIN object_res1.main_detail b ON ((a.gid = b.object_id))) JOIN object_res1.main_detail_qualifier c ON ((b.gid = c.detail_id))) ORDER BY a.gid;]]></view_script>
+			<column name="gid" type="integer" />
+			<column name="survey_gid" type="integer" />
+			<column name="description" type="varchar" />
+			<column name="source" type="text" />
+			<column name="accuracy" type="numeric" />
+			<column name="res2_id" type="integer" />
+			<column name="res3_id" type="integer" />
+			<column name="the_geom" type="geometry" />
+			<column name="object_id" type="integer" />
+			<column name="attribute_type_code" type="varchar" />
+			<column name="attribute_value" type="varchar" />
+			<column name="attribute_numeric_1" type="numeric" />
+			<column name="attribute_numeric_2" type="numeric" />
+			<column name="attribute_text_1" type="varchar" />
+			<column name="detail_id" type="integer" />
+			<column name="qualifier_type_code" type="varchar" />
+			<column name="qualifier_value" type="varchar" />
+			<column name="qualifier_numeric_1" type="numeric" />
+			<column name="qualifier_text_1" type="varchar" />
+			<column name="qualifier_timestamp_1" type="timestamptz" />
+		</view>
+		<sequence name="main_gid_seq" start="1" />
+		<sequence name="main_detail_gid_seq" start="1" />
+		<sequence name="main_detail_qualifier_gid_seq" start="1" />
+		<trigger name="resolution_id_trigger_del" table="main" id="Trigger1181867" isSystem="false" >
+			<string><![CDATA[CREATE TRIGGER resolution_id_trigger_del AFTER DELETE ON object_res1.main FOR EACH ROW WHEN ((pg_trigger_depth() = 1)) EXECUTE PROCEDURE object_res1.update_resolution_ids()]]></string>
+		</trigger>
+		<trigger name="resolution_id_trigger" table="main" id="Trigger1181867" isSystem="false" >
+			<string><![CDATA[CREATE TRIGGER resolution_id_trigger AFTER INSERT OR UPDATE OF the_geom ON object_res1.main FOR EACH ROW WHEN ((pg_trigger_depth() = 1)) EXECUTE PROCEDURE object_res1.update_resolution_ids()]]></string>
+		</trigger>
+		<trigger name="resolution_id_trigger_001" table="main" id="Trigger1181867" isSystem="false" />
+		<trigger name="res1_trigger" id="Trigger1181867" isSystem="false" />
+		<trigger name="res1_trigger_001" id="Trigger1181868" isSystem="false" />
+		<trigger name="res1_trigger_002" id="Trigger1181868" isSystem="false" />
+		<function name="edit_resolution_view" id="Function1181865" isSystem="false" >
+			<comment><![CDATA[
+This function makes the resolution 1 view editable and forwards the edits to the underlying tables.
+]]></comment>
+		</function>
+		<function name="update_resolution_ids" id="Function1181865" isSystem="false" >
+			<comment><![CDATA[
+This function updates the resolution_ids for an object when its geometry is updated or an object is inserted or deleted.
+]]></comment>
+		</function>
+	</schema>
+	<schema name="object_res2" catalogname="sensum_db_v092" schemaname="object_res2" defo="y" >
+		<table name="main" >
+			<comment>The main object table for resolution 2 (e.g. neighbourhood scale). Contains basic information about the object.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique object identifier]]></comment>
+			</column>
+			<column name="survey_gid" type="integer" length="10" jt="4" >
+				<comment><![CDATA[Identifier for the survey]]></comment>
+			</column>
+			<column name="description" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Textual description of the object]]></comment>
+			</column>
+			<column name="source" type="text" length="2147483647" jt="12" >
+				<comment><![CDATA[Source of the object content (e.g. remote sensing, in-situ)]]></comment>
+			</column>
+			<column name="accuracy" type="numeric" jt="2" >
+				<comment><![CDATA[Accuracy of the object content]]></comment>
+			</column>
+			<column name="res3_id" type="integer" length="10" jt="4" >
+				<comment><![CDATA[gid of the object at resolution level 3 (e.g. settlement scale)]]></comment>
+			</column>
+			<column name="the_geom" type="geometry" length="2147483647" jt="1111" >
+				<comment><![CDATA[Spatial reference and geometry information]]></comment>
+			</column>
+			<index name="pk_main_0" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+		</table>
+		<table name="main_detail" >
+			<comment>The main object detail table. Contains information about the object details.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique object detail identifier]]></comment>
+			</column>
+			<column name="object_id" type="integer" length="10" jt="4" >
+				<comment><![CDATA[Object identifier]]></comment>
+			</column>
+			<column name="attribute_type_code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the taxonomy attribute type]]></comment>
+			</column>
+			<column name="attribute_value" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the taxonomy attribute type (from look up table in taxonomy scheme)]]></comment>
+			</column>
+			<column name="attribute_numeric_1" type="numeric" jt="2" >
+				<comment><![CDATA[Value of the taxonomy attribute type (numeric)]]></comment>
+			</column>
+			<column name="attribute_numeric_2" type="numeric" jt="2" >
+				<comment><![CDATA[Value of the taxonomy attribute type (numeric)]]></comment>
+			</column>
+			<column name="attribute_text_1" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the taxonomy attribute type (textual)]]></comment>
+			</column>
+			<index name="pk_object" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="idx_main" unique="NORMAL" >
+				<column name="attribute_value" />
+			</index>
+			<index name="idx_main_detail" unique="NORMAL" >
+				<column name="object_id" />
+			</index>
+			<index name="pk_main" unique="NORMAL" >
+				<column name="attribute_type_code" />
+			</index>
+			<fk name="fk_object_gid" to_schema="object_res2" to_table="main" >
+				<fk_column name="object_id" pk="gid" />
+			</fk>
+			<fk name="fk_attribute_type" to_schema="taxonomy" to_table="dic_attribute_type" >
+				<fk_column name="attribute_type_code" pk="code" />
+			</fk>
+			<fk name="fk_attribute_value" to_schema="taxonomy" to_table="dic_attribute_value" >
+				<fk_column name="attribute_value" pk="attribute_value" />
+			</fk>
+		</table>
+		<table name="main_detail_qualifier" >
+			<comment>The main object detail qualifier table. Contains information about the object qualifiers.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique object detail qualifier identifier]]></comment>
+			</column>
+			<column name="detail_id" type="integer" length="10" jt="4" >
+				<comment><![CDATA[Object detail identifier]]></comment>
+			</column>
+			<column name="qualifier_type_code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the taxonomy qualifier type]]></comment>
+			</column>
+			<column name="qualifier_value" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the taxonomy qualifier type (from look up table in taxonomy scheme)]]></comment>
+			</column>
+			<column name="qualifier_numeric_1" type="numeric" jt="2" >
+				<comment><![CDATA[Value of the taxonomy qualifier type (numeric)]]></comment>
+			</column>
+			<column name="qualifier_text_1" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the taxonomy qualifier type (textual)]]></comment>
+			</column>
+			<column name="qualifier_timestamp_1" type="timestamptz" length="35" decimal="6" jt="93" >
+				<comment><![CDATA[Value of the taxonomy qualifier type (timestamp)]]></comment>
+			</column>
+			<index name="pk_main_detail_qualifier" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="idx_main_detail_qualifier" unique="NORMAL" >
+				<column name="detail_id" />
+			</index>
+			<index name="idx_main_detail_qualifier_0" unique="NORMAL" >
+				<column name="qualifier_type_code" />
+			</index>
+			<index name="idx_main_detail_qualifier_1" unique="NORMAL" >
+				<column name="qualifier_value" />
+			</index>
+			<fk name="fk_detail_gid" to_schema="object_res2" to_table="main_detail" >
+				<fk_column name="detail_id" pk="gid" />
+			</fk>
+			<fk name="fk_qualifier_type_code" to_schema="taxonomy" to_table="dic_qualifier_type" >
+				<fk_column name="qualifier_type_code" pk="code" />
+			</fk>
+			<fk name="fk_qualifier_value" to_schema="taxonomy" to_table="dic_qualifier_value" >
+				<fk_column name="qualifier_value" pk="qualifier_value" />
+			</fk>
+		</table>
+		<view name="ve_resolution2" >
+			<view_script><![CDATA[SELECT a.gid, a.survey_gid, a.description, a.source, a.accuracy, a.res3_id, a.the_geom, b.object_id, b.attribute_type_code, b.attribute_value, b.attribute_numeric_1, b.attribute_numeric_2, b.attribute_text_1, c.detail_id, c.qualifier_type_code, c.qualifier_value, c.qualifier_numeric_1, c.qualifier_text_1, c.qualifier_timestamp_1 FROM ((object_res2.main a JOIN object_res2.main_detail b ON ((a.gid = b.object_id))) JOIN object_res2.main_detail_qualifier c ON ((b.gid = c.detail_id))) ORDER BY a.gid;]]></view_script>
+			<column name="gid" type="integer" />
+			<column name="survey_gid" type="integer" />
+			<column name="description" type="varchar" />
+			<column name="source" type="text" />
+			<column name="accuracy" type="numeric" />
+			<column name="res3_id" type="integer" />
+			<column name="the_geom" type="geometry" />
+			<column name="object_id" type="integer" />
+			<column name="attribute_type_code" type="varchar" />
+			<column name="attribute_value" type="varchar" />
+			<column name="attribute_numeric_1" type="numeric" />
+			<column name="attribute_numeric_2" type="numeric" />
+			<column name="attribute_text_1" type="varchar" />
+			<column name="detail_id" type="integer" />
+			<column name="qualifier_type_code" type="varchar" />
+			<column name="qualifier_value" type="varchar" />
+			<column name="qualifier_numeric_1" type="numeric" />
+			<column name="qualifier_text_1" type="varchar" />
+			<column name="qualifier_timestamp_1" type="timestamptz" />
+		</view>
+		<sequence name="main_gid_seq" start="1" />
+		<sequence name="main_detail_gid_seq" start="1" />
+		<sequence name="main_detail_qualifier_gid_seq" start="1" />
+		<trigger name="resolution_id_trigger_del" table="main" id="Trigger1182384" isSystem="false" >
+			<string><![CDATA[CREATE TRIGGER resolution_id_trigger_del AFTER DELETE ON object_res2.main FOR EACH ROW WHEN ((pg_trigger_depth() = 1)) EXECUTE PROCEDURE object_res1.update_resolution_ids()]]></string>
+		</trigger>
+		<trigger name="resolution_id_trigger" table="main" id="Trigger1182384" isSystem="false" >
+			<string><![CDATA[CREATE TRIGGER resolution_id_trigger AFTER INSERT OR UPDATE OF the_geom ON object_res2.main FOR EACH ROW WHEN ((pg_trigger_depth() = 1)) EXECUTE PROCEDURE object_res1.update_resolution_ids()]]></string>
+		</trigger>
+		<trigger name="resolution_id_trigger_001" table="main" id="Trigger1182384" isSystem="false" />
+		<trigger name="res2_trigger" id="Trigger1182384" isSystem="false" />
+		<trigger name="res2_trigger_001" id="Trigger1182384" isSystem="false" />
+		<trigger name="res2_trigger_002" id="Trigger1182384" isSystem="false" />
+		<function name="edit_resolution_view" id="Function1182382" isSystem="false" >
+			<comment><![CDATA[
+This function makes the resolution 2 view editable and forwards the edits to the underlying tables.
+]]></comment>
+		</function>
+	</schema>
+	<schema name="object_res3" catalogname="sensum_db_v092" schemaname="object_res3" defo="y" >
+		<table name="main" >
+			<comment>The main object table for resolution 3 (e.g. settlement scale). Contains basic information about the object.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique object identifier]]></comment>
+			</column>
+			<column name="survey_gid" type="integer" length="10" jt="4" >
+				<comment><![CDATA[Identifier for the survey]]></comment>
+			</column>
+			<column name="description" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Textual description of the object]]></comment>
+			</column>
+			<column name="source" type="text" length="2147483647" jt="12" >
+				<comment><![CDATA[Source of the object content (e.g. remote sensing, in-situ)]]></comment>
+			</column>
+			<column name="accuracy" type="numeric" jt="2" >
+				<comment><![CDATA[Accuracy of the object content]]></comment>
+			</column>
+			<column name="the_geom" type="geometry" length="2147483647" jt="1111" >
+				<comment><![CDATA[Spatial reference and geometry information]]></comment>
+			</column>
+			<index name="pk_main_0" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+		</table>
+		<table name="main_detail" >
+			<comment>The main object detail table. Contains information about the object details.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique object detail identifier]]></comment>
+			</column>
+			<column name="object_id" type="integer" length="10" jt="4" >
+				<comment><![CDATA[Object identifier]]></comment>
+			</column>
+			<column name="attribute_type_code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the taxonomy attribute type]]></comment>
+			</column>
+			<column name="attribute_value" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the taxonomy attribute type (from look up table in taxonomy scheme)]]></comment>
+			</column>
+			<column name="attribute_numeric_1" type="numeric" jt="2" >
+				<comment><![CDATA[Value of the taxonomy attribute type (numeric)]]></comment>
+			</column>
+			<column name="attribute_numeric_2" type="numeric" jt="2" >
+				<comment><![CDATA[Value of the taxonomy attribute type (numeric)]]></comment>
+			</column>
+			<column name="attribute_text_1" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the taxonomy attribute type (textual)]]></comment>
+			</column>
+			<index name="pk_object" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="idx_main" unique="NORMAL" >
+				<column name="attribute_value" />
+			</index>
+			<index name="idx_main_detail" unique="NORMAL" >
+				<column name="object_id" />
+			</index>
+			<index name="pk_main" unique="NORMAL" >
+				<column name="attribute_type_code" />
+			</index>
+			<fk name="fk_object_gid" to_schema="object_res3" to_table="main" >
+				<fk_column name="object_id" pk="gid" />
+			</fk>
+			<fk name="fk_attribute_type" to_schema="taxonomy" to_table="dic_attribute_type" >
+				<fk_column name="attribute_type_code" pk="code" />
+			</fk>
+			<fk name="fk_attribute_value" to_schema="taxonomy" to_table="dic_attribute_value" >
+				<fk_column name="attribute_value" pk="attribute_value" />
+			</fk>
+		</table>
+		<table name="main_detail_qualifier" >
+			<comment>The main object detail qualifier table. Contains information about the object qualifiers.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique object detail qualifier identifier]]></comment>
+			</column>
+			<column name="detail_id" type="integer" length="10" jt="4" >
+				<comment><![CDATA[Object detail identifier]]></comment>
+			</column>
+			<column name="qualifier_type_code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the taxonomy qualifier type]]></comment>
+			</column>
+			<column name="qualifier_value" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the taxonomy qualifier type (from look up table in taxonomy scheme)]]></comment>
+			</column>
+			<column name="qualifier_numeric_1" type="numeric" jt="2" >
+				<comment><![CDATA[Value of the taxonomy qualifier type (numeric)]]></comment>
+			</column>
+			<column name="qualifier_text_1" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the taxonomy qualifier type (textual)]]></comment>
+			</column>
+			<column name="qualifier_timestamp_1" type="timestamptz" length="35" decimal="6" jt="93" >
+				<comment><![CDATA[Value of the taxonomy qualifier type (timestamp)]]></comment>
+			</column>
+			<index name="pk_main_detail_qualifier" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="idx_main_detail_qualifier" unique="NORMAL" >
+				<column name="detail_id" />
+			</index>
+			<index name="idx_main_detail_qualifier_0" unique="NORMAL" >
+				<column name="qualifier_type_code" />
+			</index>
+			<index name="idx_main_detail_qualifier_1" unique="NORMAL" >
+				<column name="qualifier_value" />
+			</index>
+			<fk name="fk_detail_gid" to_schema="object_res3" to_table="main_detail" >
+				<fk_column name="detail_id" pk="gid" />
+			</fk>
+			<fk name="fk_qualifier_type_code" to_schema="taxonomy" to_table="dic_qualifier_type" >
+				<fk_column name="qualifier_type_code" pk="code" />
+			</fk>
+			<fk name="fk_qualifier_value" to_schema="taxonomy" to_table="dic_qualifier_value" >
+				<fk_column name="qualifier_value" pk="qualifier_value" />
+			</fk>
+		</table>
+		<view name="ve_resolution3" >
+			<view_script><![CDATA[SELECT a.gid, a.survey_gid, a.description, a.source, a.accuracy, a.the_geom, b.attribute_type_code, b.attribute_value, b.attribute_numeric_1, b.attribute_numeric_2, b.attribute_text_1, c.detail_id, c.qualifier_type_code, c.qualifier_value, c.qualifier_numeric_1, c.qualifier_text_1, c.qualifier_timestamp_1 FROM ((object_res3.main a JOIN object_res3.main_detail b ON ((a.gid = b.object_id))) JOIN object_res3.main_detail_qualifier c ON ((b.gid = c.detail_id))) ORDER BY a.gid;]]></view_script>
+			<column name="gid" type="integer" />
+			<column name="survey_gid" type="integer" />
+			<column name="description" type="varchar" />
+			<column name="source" type="text" />
+			<column name="accuracy" type="numeric" />
+			<column name="the_geom" type="geometry" />
+			<column name="attribute_type_code" type="varchar" />
+			<column name="attribute_value" type="varchar" />
+			<column name="attribute_numeric_1" type="numeric" />
+			<column name="attribute_numeric_2" type="numeric" />
+			<column name="attribute_text_1" type="varchar" />
+			<column name="detail_id" type="integer" />
+			<column name="qualifier_type_code" type="varchar" />
+			<column name="qualifier_value" type="varchar" />
+			<column name="qualifier_numeric_1" type="numeric" />
+			<column name="qualifier_text_1" type="varchar" />
+			<column name="qualifier_timestamp_1" type="timestamptz" />
+		</view>
+		<sequence name="main_gid_seq" start="1" />
+		<sequence name="main_detail_gid_seq" start="1" />
+		<sequence name="main_detail_qualifier_gid_seq" start="1" />
+		<trigger name="res3_trigger" id="Trigger1183245" isSystem="false" />
+		<trigger name="res3_trigger_001" id="Trigger1183245" isSystem="false" />
+		<trigger name="res3_trigger_002" id="Trigger1183245" isSystem="false" />
+		<trigger name="resolution_id_trigger_del" table="main" id="Trigger1183245" isSystem="false" >
+			<string><![CDATA[CREATE TRIGGER resolution_id_trigger_del AFTER DELETE ON object_res3.main FOR EACH ROW WHEN ((pg_trigger_depth() = 1)) EXECUTE PROCEDURE object_res1.update_resolution_ids()]]></string>
+		</trigger>
+		<trigger name="resolution_id_trigger" table="main" id="Trigger1183245" isSystem="false" >
+			<string><![CDATA[CREATE TRIGGER resolution_id_trigger AFTER INSERT OR UPDATE OF the_geom ON object_res3.main FOR EACH ROW WHEN ((pg_trigger_depth() = 1)) EXECUTE PROCEDURE object_res1.update_resolution_ids()]]></string>
+		</trigger>
+		<trigger name="resolution_id_trigger_001" table="main" id="Trigger1183245" isSystem="false" />
+		<function name="edit_resolution_view" id="Function1183243" isSystem="false" >
+			<comment><![CDATA[
+This function makes the resolution 3 view editable and forwards the edits to the underlying tables.
+]]></comment>
+		</function>
+	</schema>
+	<schema name="taxonomy" catalogname="sensum_db_v092" schemaname="taxonomy" defo="y" >
+		<table name="dic_attribute_type" >
+			<comment>The attribute type dictionary table. Contains information about the attribute types.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique attribute type identifier]]></comment>
+			</column>
+			<column name="code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the attribute type]]></comment>
+			</column>
+			<column name="description" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Short textual description of the attribute type]]></comment>
+			</column>
+			<column name="extended_description" type="varchar" length="1024" jt="12" >
+				<comment><![CDATA[Extended textual description of the attribute type]]></comment>
+			</column>
+			<column name="taxonomy_code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the taxonomy]]></comment>
+			</column>
+			<column name="attribute_level" type="smallint" length="5" jt="5" >
+				<comment><![CDATA[Identifier of the attribute level (e.g. GEM taxonomy: 1 = main attribute, 2 = secondary attribute, 3 = tertiary attribute)]]></comment>
+			</column>
+			<column name="attribute_order" type="smallint" length="5" jt="5" >
+				<comment><![CDATA[Order of the attribute type. To be used for compiling a textual representation of the taxonomy attributes and their values which follows a predefined order (e.g. GEM Taxonomy TaxT strings)]]></comment>
+			</column>
+			<index name="pk_dic_attribute_type" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="idx_dic_attribute_type" unique="UNIQUE" >
+				<column name="code" />
+			</index>
+			<index name="idx_dic_attribute_type_0" unique="NORMAL" >
+				<column name="taxonomy_code" />
+			</index>
+			<fk name="fk_dic_attribute_type" to_schema="taxonomy" to_table="dic_taxonomy" >
+				<fk_column name="taxonomy_code" pk="code" />
+			</fk>
+		</table>
+		<table name="dic_attribute_value" >
+			<comment>The attribute value dictionary table. Contains information about the attribute values.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique attribute value identifier]]></comment>
+			</column>
+			<column name="attribute_type_code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the attribute type to which the value refers to]]></comment>
+			</column>
+			<column name="attribute_value" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the attribute]]></comment>
+			</column>
+			<column name="description" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Short textual description of the attribute value]]></comment>
+			</column>
+			<column name="extended_description" type="varchar" length="1024" jt="12" >
+				<comment><![CDATA[Extended textual description of the attribute value]]></comment>
+			</column>
+			<index name="pk_dic_attribute_value" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="pk_dic_attribute_value_0" unique="UNIQUE" >
+				<column name="attribute_value" />
+			</index>
+			<index name="idx_dic_attribute_value" unique="NORMAL" >
+				<column name="attribute_type_code" />
+			</index>
+			<fk name="fk_attribute_type_code" to_schema="taxonomy" to_table="dic_attribute_type" >
+				<fk_column name="attribute_type_code" pk="code" />
+			</fk>
+		</table>
+		<table name="dic_hazard" >
+			<comment>The hazard dictionary table. Contains information about the hazard type to which the taxonomy attribute type is linked to.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique hazard identifier]]></comment>
+			</column>
+			<column name="code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Identifier for the hazard type]]></comment>
+			</column>
+			<column name="description" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Short textual description of the hazard type]]></comment>
+			</column>
+			<column name="extended_description" type="varchar" length="1024" jt="12" >
+				<comment><![CDATA[Extended textual description of the hazard type]]></comment>
+			</column>
+			<column name="attribute_type_code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the taxonomy attribute type to which the hazard type is linked to]]></comment>
+			</column>
+			<index name="pk_hazard" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="idx_hazard" unique="NORMAL" >
+				<column name="attribute_type_code" />
+			</index>
+			<fk name="fk_attribute_type_code" to_schema="taxonomy" to_table="dic_attribute_type" >
+				<fk_column name="attribute_type_code" pk="code" />
+			</fk>
+		</table>
+		<table name="dic_qualifier_type" >
+			<comment>The qualifier type dictionary table. Contains information about the qualifier types.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique qualifier type identifier]]></comment>
+			</column>
+			<column name="code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the qualifier type]]></comment>
+			</column>
+			<column name="description" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Short textual description of the qualifier type]]></comment>
+			</column>
+			<column name="extended_description" type="varchar" length="1024" jt="12" >
+				<comment><![CDATA[Extended textual description of the qualifier type]]></comment>
+			</column>
+			<index name="pk_qualifier_type" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="pk_dic_qualifier_type" unique="UNIQUE" >
+				<column name="code" />
+			</index>
+		</table>
+		<table name="dic_qualifier_value" >
+			<comment>The qualifier value dictionary table. Contains information about the qualifier values.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique qualifier value identifier]]></comment>
+			</column>
+			<column name="qualifier_type_code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the qualifier type to which the value refers to]]></comment>
+			</column>
+			<column name="qualifier_value" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Value of the qualifier]]></comment>
+			</column>
+			<column name="description" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Short textual description of the qualifier value]]></comment>
+			</column>
+			<column name="extended_description" type="varchar" length="1024" jt="12" >
+				<comment><![CDATA[Extended textual description of the qualifier value]]></comment>
+			</column>
+			<index name="pk_dic_qualifier_value" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="pk_dic_qualifier_value_0" unique="UNIQUE" >
+				<column name="qualifier_value" />
+			</index>
+			<index name="idx_dic_qualifier_value" unique="NORMAL" >
+				<column name="qualifier_type_code" />
+			</index>
+			<fk name="fk_dic_qualifier_value" to_schema="taxonomy" to_table="dic_qualifier_type" >
+				<fk_column name="qualifier_type_code" pk="code" />
+			</fk>
+		</table>
+		<table name="dic_taxonomy" >
+			<comment>The taxonomy dictionary table. Contains information about the taxonomy to which the attribute type is linked to.</comment>
+			<column name="gid" type="serial" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique taxonomy identifier]]></comment>
+			</column>
+			<column name="code" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Code of the taxonomy]]></comment>
+			</column>
+			<column name="description" type="varchar" length="254" jt="12" >
+				<comment><![CDATA[Short textual description of the taxonomy]]></comment>
+			</column>
+			<column name="extended_description" type="varchar" length="1024" jt="12" >
+				<comment><![CDATA[Extended textual description of the taxonomy]]></comment>
+			</column>
+			<column name="version_date" type="date" length="13" jt="91" >
+				<comment><![CDATA[Version of the taxonomy (date of the version)]]></comment>
+			</column>
+			<index name="pk_dic_taxonomy" unique="PRIMARY_KEY" >
+				<column name="gid" />
+			</index>
+			<index name="pk_dic_taxonomy_0" unique="UNIQUE" >
+				<column name="code" />
+			</index>
+		</table>
+		<sequence name="dic_qualifier_type_gid_seq" start="1" />
+		<sequence name="dic_qualifier_value_gid_seq" start="1" />
+		<sequence name="dic_taxonomy_gid_seq" start="1" />
+		<sequence name="dic_attribute_type_gid_seq" start="1" />
+		<sequence name="dic_attribute_value_gid_seq" start="1" />
+		<sequence name="dic_hazard_gid_seq" start="1" />
+	</schema>
+	<connector name="PostgreSQL" database="PostgreSQL" driver_class="org.postgresql.Driver" driver_jar="postgresql-9.1-902.jdbc3.jar" host="localhost" port="5432" instance="sensum_db_v092" user="postgres" passwd="cG9zdGdyZXM=" schema_mapping="" />
+	<layout id="Layout1196439" name="history" confirmed="y" show_relation_columns="y" >
+		<entity schema="history" name="logged_actions" color="c0d4f3" x="45" y="60" />
+	</layout>
+	<layout id="Layout1196447" name="object_res2" confirmed="y" show_relation_columns="y" >
+		<entity schema="object_res2" name="main" color="d7c2f2" x="240" y="270" />
+		<entity schema="object_res2" name="main_detail" color="d7c2f2" x="45" y="270" />
+		<entity schema="object_res2" name="main_detail_qualifier" color="d7c2f2" x="240" y="60" />
+		<entity schema="object_res2" name="ve_resolution2" color="d7c2f2" x="390" y="270" />
+		<group name="main" color="e3d7f2" >
+			<entity schema="object_res2" name="main" />
+			<entity schema="object_res2" name="main_detail" />
+			<entity schema="object_res2" name="ve_resolution2" />
+			<entity schema="object_res2" name="main_detail_qualifier" />
+		</group>
+	</layout>
+	<layout id="Layout1196449" name="object_res3" confirmed="y" show_relation_columns="y" >
+		<entity schema="object_res3" name="main" color="d7c2f2" x="240" y="270" />
+		<entity schema="object_res3" name="main_detail" color="d7c2f2" x="45" y="270" />
+		<entity schema="object_res3" name="main_detail_qualifier" color="d7c2f2" x="240" y="60" />
+		<entity schema="object_res3" name="ve_resolution3" color="d7c2f2" x="390" y="270" />
+		<group name="main" color="e3d7f2" >
+			<entity schema="object_res3" name="main" />
+			<entity schema="object_res3" name="main_detail" />
+			<entity schema="object_res3" name="ve_resolution3" />
+			<entity schema="object_res3" name="main_detail_qualifier" />
+		</group>
+	</layout>
+	<layout id="Layout1196444" name="sensum_db_v092" joined_routing="y" show_column_type="y" show_relation_columns="y" show_page_borders="y" >
+		<entity schema="object_res1" name="ve_resolution1" color="d7c2f2" x="45" y="255" />
+		<entity schema="object_res1" name="main" color="d7c2f2" x="270" y="60" />
+		<entity schema="taxonomy" name="dic_attribute_value" color="c0d4f3" x="735" y="360" />
+		<entity schema="taxonomy" name="dic_attribute_type" color="c0d4f3" x="735" y="195" />
+		<entity schema="taxonomy" name="dic_qualifier_type" color="c0d4f3" x="570" y="495" />
+		<entity schema="taxonomy" name="dic_qualifier_value" color="c0d4f3" x="900" y="495" />
+		<entity schema="taxonomy" name="dic_taxonomy" color="c0d4f3" x="885" y="60" />
+		<entity schema="taxonomy" name="dic_hazard" color="c0d4f3" x="585" y="60" />
+		<entity schema="history" name="logged_actions" color="c0d4f3" x="1170" y="60" />
+		<entity schema="object_res1" name="main_detail_qualifier" color="d7c2f2" x="270" y="450" />
+		<entity schema="object_res1" name="main_detail" color="d7c2f2" x="270" y="255" />
+		<group name="object_res1" color="e3d7f2" >
+			<entity schema="object_res1" name="main" />
+			<entity schema="object_res1" name="main_detail" />
+			<entity schema="object_res1" name="ve_resolution1" />
+			<entity schema="object_res1" name="main_detail_qualifier" />
+		</group>
+		<group name="taxonomy" color="c4e0f9" >
+			<entity schema="taxonomy" name="dic_attribute_value" />
+			<entity schema="taxonomy" name="dic_attribute_type" />
+			<entity schema="taxonomy" name="dic_qualifier_type" />
+			<entity schema="taxonomy" name="dic_qualifier_value" />
+			<entity schema="taxonomy" name="dic_taxonomy" />
+			<entity schema="taxonomy" name="dic_hazard" />
+		</group>
+		<group name="history" color="ffcccc" >
+			<entity schema="history" name="logged_actions" />
+		</group>
+	</layout>
+	<layout id="Layout1196451" name="taxonomy" confirmed="y" show_relation_columns="y" >
+		<entity schema="taxonomy" name="dic_attribute_type" color="d7c2f2" x="45" y="60" />
+		<entity schema="taxonomy" name="dic_attribute_value" color="d7c2f2" x="435" y="270" />
+		<entity schema="taxonomy" name="dic_hazard" color="d7c2f2" x="435" y="90" />
+		<entity schema="taxonomy" name="dic_qualifier_type" color="d7c2f2" x="240" y="270" />
+		<entity schema="taxonomy" name="dic_qualifier_value" color="d7c2f2" x="45" y="270" />
+		<entity schema="taxonomy" name="dic_taxonomy" color="d7c2f2" x="240" y="90" />
+		<group name="dic_qualifier_type" color="e3d7f2" >
+			<entity schema="taxonomy" name="dic_qualifier_type" />
+			<entity schema="taxonomy" name="dic_qualifier_value" />
+			<entity schema="taxonomy" name="dic_attribute_value" />
+			<entity schema="taxonomy" name="dic_taxonomy" />
+			<entity schema="taxonomy" name="dic_hazard" />
+			<entity schema="taxonomy" name="dic_attribute_type" />
+		</group>
+	</layout>
+</project>
