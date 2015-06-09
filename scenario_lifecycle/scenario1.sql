@@ -25,7 +25,8 @@ insert into object_res1.ve_resolution1 (survey_gid, description, source, accurac
 	select 1, 'building', 'EO', 73, the_geom from public.eo_cologne;
 
 ----------------------------------------------------------------------------------------------------------------
--- RELEASE 1: publish on github -> run "sensum_db_publish.py" to create a new release
+-- RELEASE 1: publish via github -> run "sensum_db_publish_git.py" to create a new release
+--	      publish via geogig -> run "sensum_db_publish_geogig.py" to create a new release
 ----------------------------------------------------------------------------------------------------------------
 
 -- tt2: update existing objects (where new and old intersect) with data from OSM
@@ -52,7 +53,8 @@ insert into object_res1.ve_resolution1 (survey_gid, description, source, accurac
 			where st_equals(a.the_geom, b.the_geom)) c;
 
 ----------------------------------------------------------------------------------------------------------------
--- RELEASE 2: publish on github -> run "sensum_db_publish.py" to create a new release
+-- RELEASE 2: publish via github -> run "sensum_db_publish_git.py" to create a new release
+--	      publish via geogig -> run "sensum_db_publish_geogig.py" to create a new release
 ----------------------------------------------------------------------------------------------------------------
 
 -- tt4: update attributes of a random object with random values following RRVS data entry
@@ -96,7 +98,8 @@ insert into object_res1.ve_resolution1 (survey_gid, description, source, accurac
 			where st_equals(a.the_geom, b.the_geom)) c;
 
 ----------------------------------------------------------------------------------------------------------------
--- RELEASE 3: publish on github -> run "sensum_db_publish.py" to create a new release
+-- RELEASE 3: publish via github -> run "sensum_db_publish_git.py" to create a new release
+--	      publish via geogig -> run "sensum_db_publish_geogig.py" to create a new release
 ----------------------------------------------------------------------------------------------------------------
 
 -- This gives the full transaction time history (all the logged changes) of a table/view and writes it to a view
