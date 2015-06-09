@@ -1,9 +1,9 @@
 '''
 -----------------------------------------------------------------------------
-    sensum_db_publish.py
+    sensum_db_publish_git.py
 -----------------------------------------------------------------------------                         
 Created on 26.11.2014
-Last modified on 01.12.2014
+Last modified on 09.06.2015
 Author: Marc Wieland
 Description: 
 	- this script publishes the data and metadata tables of the sensum_db model
@@ -27,29 +27,34 @@ import os
 # Parameters to set ########################################################################################################
 host = 'localhost'
 port = '5432'
-dbname = 'sensum_db_scenario'
+dbname = 'db_paper_lifecycle'
 user = 'postgres'
-pw = '****'
+pw = 'postgres'
 s_srs = '4326'	# source spatial reference system
-git_local = 'PATH_TO_LOCAL_GIT_REPO/'	# path to local git repository (should have a remote repo assigned)
+git_local = '/media/datadrive_/documents/papers/Journal 2015 - LifecycleManagement_TOFINISH/scenario_git/'	# path to local git repository (should have a remote repo assigned)
 ############################################################################################################################
+
+# escape strings for shell commands
+def shellquote(s):
+    return "'" + s.replace("'", "'\\''") + "'"
 
 # delete existing files
 if os.path.exists(git_local + 'v_resolution1_data.geojson'):
-    com = 'sudo rm ' + git_local + 'v_resolution1_data.geojson'
+    com = 'sudo rm ' + shellquote(git_local + 'v_resolution1_data.geojson')
     os.system(com)
-
+    
 if os.path.exists(git_local + 'v_resolution1_metadata.csv'):
-    com = 'sudo rm ' + git_local + 'v_resolution1_metadata.csv'
+    com = 'sudo rm ' + shellquote(git_local + 'v_resolution1_metadata.csv')
     os.system(com)
 
-# get source srs of table
+# TODO: get source srs of table
 
 # dump data to geojson with specified source and target spatial reference system (4326 - WGS84)
-com = 'ogr2ogr -f "GeoJSON" ' + git_local + 'v_resolution1_data.geojson -s_srs EPSG:' + s_srs + ' -t_srs EPSG:4326 PG:"host=' + host + ' port=' + port + ' dbname=' + dbname + ' user=' + user + ' password=' + pw + '" "object_res1.v_resolution1_data"'
+com = 'ogr2ogr -f "GeoJSON" ' + shellquote(git_local) + 'v_resolution1_data.geojson -s_srs EPSG:' + s_srs + ' -t_srs EPSG:4326 PG:"host=' + host + ' port=' + port + ' dbname=' + dbname + ' user=' + user + ' password=' + pw + '" "object_res1.v_resolution1_data"'
 os.system(com)        
                 
 # dump metadata to csv (note: use psql and \copy to avoid permission error)
+# TODO: fix problem with string escapes
 com = 'psql -U ' + user + ' -p ' + port + ' -d ' + dbname + ' -c "\COPY (SELECT * FROM object_res1.v_resolution1_metadata) TO ' + git_local + 'v_resolution1_metadata.csv DELIMITER \',\' CSV HEADER;"'
 os.system(com)
 
@@ -69,3 +74,4 @@ os.system(com)
 # push to remote repo
 com = 'git push -u origin master'
 os.system(com)
+

@@ -25,7 +25,7 @@ insert into object_res1.ve_resolution1 (survey_gid, description, source, accurac
 	select 1, 'building', 'EO', 73, the_geom from public.eo_cologne;
 
 ----------------------------------------------------------------------------------------------------------------
--- RELEASE 1: publish via github -> run "sensum_db_publish_git.py" to create a new release
+-- RELEASE 1: publish via github -> run "sensum_db_publish_git.py" to create a new release OR
 --	      publish via geogig -> run "sensum_db_publish_geogig.py" to create a new release
 ----------------------------------------------------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ insert into object_res1.ve_resolution1 (survey_gid, description, source, accurac
 -- note: now the first intersecting object is updated in case of multiple intersections per object (the other intersecting objects are deleted)
 update object_res1.ve_resolution1 set 
 	survey_gid=2, 
-	description='building', 
+	description='building',
 	source='OSM',
 	accuracy=85,
 	the_geom=c.geom
@@ -53,7 +53,7 @@ insert into object_res1.ve_resolution1 (survey_gid, description, source, accurac
 			where st_equals(a.the_geom, b.the_geom)) c;
 
 ----------------------------------------------------------------------------------------------------------------
--- RELEASE 2: publish via github -> run "sensum_db_publish_git.py" to create a new release
+-- RELEASE 2: publish via github -> run "sensum_db_publish_git.py" to create a new release OR
 --	      publish via geogig -> run "sensum_db_publish_geogig.py" to create a new release
 ----------------------------------------------------------------------------------------------------------------
 
@@ -98,7 +98,7 @@ insert into object_res1.ve_resolution1 (survey_gid, description, source, accurac
 			where st_equals(a.the_geom, b.the_geom)) c;
 
 ----------------------------------------------------------------------------------------------------------------
--- RELEASE 3: publish via github -> run "sensum_db_publish_git.py" to create a new release
+-- RELEASE 3: publish via github -> run "sensum_db_publish_git.py" to create a new release OR
 --	      publish via geogig -> run "sensum_db_publish_geogig.py" to create a new release
 ----------------------------------------------------------------------------------------------------------------
 
