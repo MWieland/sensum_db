@@ -9,13 +9,13 @@
 ------------------------------------------------------------------------------------------------
 
 -- preprocessing: make sure all input layers have the same srs and an index on the geometry for faster queries
-alter table public.eo_cologne alter column the_geom type Geometry(Polygon, 4326) using st_transform(the_geom, 4326);
-alter table public.osm_cologne alter column the_geom type Geometry(Polygon, 4326) using st_transform(the_geom, 4326);
-alter table public.alk_cologne_subset alter column the_geom type Geometry(Polygon, 4326) using st_transform(the_geom, 4326);
---create index eo_cologne_idx on public.eo_cologne using gist (the_geom);
-create index osm_cologne_idx on public.osm_cologne using gist (the_geom);
-create index alk_cologne_idx on public.alk_cologne_subset using gist (the_geom);
-create index main_idx on object_res1.main using gist (the_geom);
+alter table public.eo_cl alter column the_geom type Geometry(Polygon, 4326) using st_transform(the_geom, 4326);
+alter table public.osm_cl alter column the_geom type Geometry(Polygon, 4326) using st_transform(the_geom, 4326);
+alter table public.alk_cl_subset alter column the_geom type Geometry(Polygon, 4326) using st_transform(the_geom, 4326);
+--create index eo_cl_idx on public.eo_cl using gist (the_geom);
+create index if not exists osm_cl_idx on public.osm_cl using gist (the_geom);
+create index if not exists alk_cl_idx on public.alk_cl_subset using gist (the_geom);
+create index if not exists main_idx on object_res1.main using gist (the_geom);
 
 -- activate logs for editable view
 select history.history_table('object_res1.ve_resolution1', 'true', 'false', '{res2_id, res3_id}'::text[]);
@@ -24,7 +24,7 @@ select history.history_table('object_res1.ve_resolution1', 'true', 'false', '{re
 
 -- tt1: insert objects with geometry from EO tool results
 insert into object_res1.ve_resolution1 (survey_gid, description, source, accuracy, the_geom) 
-	select 1, 'building', 'EO', 73, the_geom from public.eo_cologne;
+	select 1, 'building', 'EO', 73, the_geom from public.eo_cl;
 
 ----------------------------------------------------------------------------------------------------------------
 -- RELEASE 1: publish via github or geogig to create a new release
@@ -39,18 +39,18 @@ update object_res1.ve_resolution1 set
 	source='OSM',
 	accuracy=85,
 	the_geom=c.geom
-	from (select distinct on (aid) a.gid as aid, b.gid as bid, a.the_geom as geom from public.osm_cologne a, object_res1.ve_resolution1 b 
+	from (select distinct on (aid) a.gid as aid, b.gid as bid, a.the_geom as geom from public.osm_cl a, object_res1.ve_resolution1 b 
 		where st_intersects(a.the_geom, b.the_geom) group by a.gid, b.gid, a.the_geom order by a.gid) as c
 	where gid=c.bid;
 	
 delete from object_res1.ve_resolution1 
-	where gid in (select b.gid from public.osm_cologne a, object_res1.ve_resolution1 b where st_intersects(a.the_geom, b.the_geom)) and source!='OSM';
+	where gid in (select b.gid from public.osm_cl a, object_res1.ve_resolution1 b where st_intersects(a.the_geom, b.the_geom)) and source!='OSM';
 
 -- tt3: insert new objects (where no intersection between new and old) from OSM
 -- note: insert into editable view takes ages (772353ms) compared to insert into table (718ms)
 insert into object_res1.ve_resolution1 (survey_gid, description, source, accuracy, the_geom) 
-	select * from (select 2, 'building', 'OSM', 85, the_geom from public.osm_cologne
-		except select 2, 'building', 'OSM', 85, a.the_geom from public.osm_cologne a, object_res1.ve_resolution1 b 
+	select * from (select 2, 'building', 'OSM', 85, the_geom from public.osm_cl
+		except select 2, 'building', 'OSM', 85, a.the_geom from public.osm_cl a, object_res1.ve_resolution1 b 
 			where st_equals(a.the_geom, b.the_geom)) c;
 
 ----------------------------------------------------------------------------------------------------------------
@@ -84,17 +84,17 @@ update object_res1.ve_resolution1 set
 	source='OF',
 	accuracy=95,
 	the_geom=c.geom
-	from (select distinct on (aid) a.gid as aid, b.gid as bid, a.the_geom as geom from public.alk_cologne_subset a, object_res1.ve_resolution1 b 
+	from (select distinct on (aid) a.gid as aid, b.gid as bid, a.the_geom as geom from public.alk_cl_subset a, object_res1.ve_resolution1 b 
 		where st_intersects(a.the_geom, b.the_geom) group by a.gid, b.gid order by a.gid) as c
 	where gid=c.bid;
 	
 delete from object_res1.ve_resolution1 
-	where gid in (select b.gid from public.alk_cologne_subset a, object_res1.ve_resolution1 b where st_intersects(a.the_geom, b.the_geom)) and source!='OF';
+	where gid in (select b.gid from public.alk_cl_subset a, object_res1.ve_resolution1 b where st_intersects(a.the_geom, b.the_geom)) and source!='OF';
 
 -- tt6: insert new objects from cadastre (465299ms)
 insert into object_res1.ve_resolution1 (survey_gid, description, source, accuracy, the_geom) 
-	select * from (select 3, 'building', 'OF', 95, the_geom from public.alk_cologne_subset
-		except select 3, 'building', 'OF', 95, a.the_geom from public.alk_cologne_subset a, object_res1.ve_resolution1 b 
+	select * from (select 3, 'building', 'OF', 95, the_geom from public.alk_cl_subset
+		except select 3, 'building', 'OF', 95, a.the_geom from public.alk_cl_subset a, object_res1.ve_resolution1 b 
 			where st_equals(a.the_geom, b.the_geom)) c;
 
 ----------------------------------------------------------------------------------------------------------------

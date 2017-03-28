@@ -30,17 +30,15 @@ $ psql -h localhost -U postgres -d sensum_db -f add_taxonomies.sql;
 
 ## Scenarios
 #### Load scenario data
-$ psql -h localhost -U postgres -d sensum_db -f scenario_1_data.sql;
 $ psql -h localhost -U postgres -d sensum_db -f scenario_2_data.sql;
 
-#### Run scenarios
-$ psql -h localhost -U postgres -d sensum_db -f scenario_1.sql;
+#### Run scenario
 $ psql -h localhost -U postgres -d sensum_db -f scenario_2.sql;
 
-#### Explore scenarios with example queries or by looking at the run scenario scripts
-scenario_1_queries.sql
+#### Explore scenario with example queries or by looking at the run scenario scripts
 scenario_2_queries.sql
 
+#### Make sure to clean scenario data and history before running a new scenario
 
 ## Examples
 More example queries can be found in example_queries.sql
