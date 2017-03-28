@@ -14,21 +14,33 @@ PostGIS 2.0 or higher
 
 ## Installation 
 #### Create empty database
+$ createdb sensum_db -h localhost -U postgres
 
 #### Add main database model
-main_db.sql
+$ psql -h localhost -U postgres -d sensum_db -f main_db.sql;
 
 #### Add multi-temporal support to the database model
-add_temporal_support.sql
+$ psql -h localhost -U postgres -d sensum_db -f add_temporal_support.sql;
 
 #### Add multi-resolution support to the database model
-add_resolution_support.sql
+$ psql -h localhost -U postgres -d sensum_db -f add_resolution_support.sql;
 
 #### Add sample taxonomies to the database model
-add_taxonomies.sql
+$ psql -h localhost -U postgres -d sensum_db -f add_taxonomies.sql;
 
 ## Scenarios
-#### ...
+#### Load scenario data
+$ psql -h localhost -U postgres -d sensum_db -f scenario_1_data.sql;
+$ psql -h localhost -U postgres -d sensum_db -f scenario_2_data.sql;
+
+#### Run scenarios
+$ psql -h localhost -U postgres -d sensum_db -f scenario_1.sql;
+$ psql -h localhost -U postgres -d sensum_db -f scenario_2.sql;
+
+#### Explore scenarios with example queries or by looking at the run scenario scripts
+scenario_1_queries.sql
+scenario_2_queries.sql
+
 
 ## Examples
 More example queries can be found in example_queries.sql
