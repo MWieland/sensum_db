@@ -1,14 +1,13 @@
 ﻿----------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------
--- Name: SENSUM multi-temporal database support
--- Version: 0.92
+-- Name: add_temporal_support.sql
+-- Version: 0.9.2
 -- Date: 16.01.15
 -- Author: M. Wieland
--- DBMS: PostgreSQL9.2 / PostGIS2.0
--- Description: Adds the multi-temporal support to the basic SENSUM data model.
---		1. Adds trigger functions to log database transactions for selected tables or views
---		   (reference: http://wiki.postgresql.org/wiki/Audit_trigger_91plus)
---		2. Adds gethistory functions for transaction time and valid time
+-- DBMS: PostgreSQL9.2 / PostGIS2.0 or higher
+-- Description: Adds the multi-temporal support to the main database model.
+--			    Adds trigger functions to log database transactions for selected tables or views (reference: http://wiki.postgresql.org/wiki/Audit_trigger_91plus).
+--		        Adds gethistory functions for transaction time and valid time.
 ----------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------
 

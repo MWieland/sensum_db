@@ -1,17 +1,16 @@
 ﻿------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------
--- Name: SENSUM multi-temporal support examples
+-- Name: example_queries.sql
 -- Version: 0.9.2
 -- Date: 16.01.15
 -- Author: M. Wieland
--- DBMS: PostgreSQL9.2 / PostGIS2.0
+-- DBMS: PostgreSQL9.2 / PostGIS2.0 or higher
 -- Description: Some examples to 
---			- activate/deactivate logging of transactions
---			- properly insert, update and delete entries with temporal component
---			- transaction and valid time history
---			- temporal queries
---			- spatio-temporal queries
---			- other queries
+--				- activate/deactivate logging of transactions
+--				- properly insert, update and delete entries with temporal component
+--				- transaction and valid time history
+--				- temporal queries
+--				- spatio-temporal queries
 ------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------
 
@@ -149,20 +148,3 @@ SELECT DISTINCT ON (a.gid) a.* FROM history.vtime_history as a, public.streets_o
 	a.mat_type = 'MR' AND
 	a.transaction_timestamp > (timestamp 'now' - interval '1 week')
 	ORDER BY a.gid, a.transaction_timestamp DESC;
-
-
----------------------------------------------------------------------------------
--------------------- Other temporal queries and useful functions ----------------
----------------------------------------------------------------------------------
--- See also: http://www.postgresql.org/docs/9.1/static/functions-datetime.html --
----------------------------------------------------------------------------------
-
--- Truncate timestamp to desired unit
-SELECT date_trunc('minute', transaction_timestamp) FROM history.ttime_history; 
-
--- Convert timestamptz to timestamp
-SELECT transaction_timestamp AT TIME ZONE 'UTC' FROM history.ttime_history;
-
--- Create input for time series visualisation with for example QGIS time manager plugin
--- note: plugin runs much faster with a table than with a view!
-SELECT *, transaction_timestamp AT TIME ZONE 'UTC' AS transaction_timestamp_utc INTO public.ttime_history_t FROM history.ttime_history;

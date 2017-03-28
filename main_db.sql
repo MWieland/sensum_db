@@ -1,13 +1,14 @@
 ﻿-----------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------
--- Name: SENSUM multi-resolution, multi-temporal database model 
+-- Name: main_db.sql
 -- Version: 0.9.2
--- Date: 02.12.14
+-- Date: 16.01.15
 -- Author: M. Wieland
--- DBMS: PostgreSQL9.2 / PostGIS2.0
--- Description: Adds the basic data model with hstore and postgis support.  
---		To activate multi-resolution support run sensum_db_AddMultiResolutionSupport.sql. 
---		To activate multi-temporal support run sensum_db_AddMultiTemporalSupport.sql.
+-- DBMS: PostgreSQL9.2 / PostGIS2.0 or higher
+-- Description: The main database model.  
+--				To activate multi-resolution support run add_temporal_support.sql. 
+--				To activate multi-temporal support run add_resolution_support.sql.
+--				To load sample taxonomies run add_taxonomies.sql.
 -----------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------
 

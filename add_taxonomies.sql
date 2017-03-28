@@ -1,20 +1,15 @@
 ﻿------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
--- Name: SENSUM multi-resolution database support for Remote Rapid Visual Screening (RRVS)
--- Version: 0.3.5
+-- Name: add_taxonomies.sql
+-- Version: 0.9.2
 -- Date: 16.01.15
 -- Author: M. Wieland
--- DBMS: PostgreSQL9.2 / PostGIS2.0
--- SENSUM data model: tested on version 0.9
--- Description: Adjusts the basic SENSUM data model to fit the SENSUM indicators used for a RRVS of buildings
---		1. Fills the taxonomy tables with attribute types and values, and according qualifier types and values
--- 		   Implemented attributes: GEM Taxonomy v2.0, EMCA building types, EMS-98 Vulnerability, EMS-98 Damage grades
--- 		   Implemented qualifiers: Belief, Quality, Source, Validtime
--- 		   Implemented resolutions: Resolution 1 (per-building)
---		2. Adjusts the editable view for resolution 1, 2 and 3 from the basic SENSUM data model to the RRVS specifications
---		   Attributes in use: GEM Taxonomy, EMCA building types, Vulnerability
---		   Qualifiers in use: Belief, Validtime, Source
---		3. Creates views for data and metadata exchange
+-- DBMS: PostgreSQL9.2 / PostGIS2.0 or higher
+-- Description: Fills the taxonomy tables with attribute types and values, and according qualifier types and values
+-- 		   			Implemented attributes: GEM Taxonomy v2.0, EMCA building types, EMS-98 Vulnerability, EMS-98 Damage grades
+-- 		   			Implemented qualifiers: Belief, Quality, Source, Validtime
+-- 		   			Implemented resolutions: Resolution 1 (per-building)
+--				Creates views for data and metadata exchange
 ------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------
 

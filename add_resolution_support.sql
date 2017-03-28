@@ -1,13 +1,13 @@
 ﻿------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------
--- Name: SENSUM multi-resolution database support
+-- Name: add_resolution_support.sql
 -- Version: 0.9.2
--- Date: 02.12.14
+-- Date: 16.01.15
 -- Author: M. Wieland
--- DBMS: PostgreSQL9.2 / PostGIS2.0
--- Description: Adds the multi-resolution support to the basic SENSUM data model.
---		1. Create editable views for three resolution levels with basic table structure
---		2. Auto-update resolution ids based on spatial join between resolution levels
+-- DBMS: PostgreSQL9.2 / PostGIS2.0 or higher
+-- Description: Adds the multi-resolution support to the main database model.
+--				Creates editable views for three resolution levels with basic table structure.
+--				Adds auto-update resolution ids based on spatial join between resolution levels.
 ------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------
 
